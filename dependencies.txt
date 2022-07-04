@@ -1,0 +1,12 @@
+keyboard==0.13.5
+mouse==0.7.1
+numpy==1.19.3
+opencv-python==4.5.3.56
+Pillow==8.3.2
+pynput==1.7.3
+pypiwin32==223
+pywin32==301
+six==1.16.0
+pyinstaller==4.5.1
+screeninfo==0.7
+pywinauto==0.6.8
