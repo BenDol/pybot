@@ -23,23 +23,30 @@ os.system('mode con: cols=100 lines=41')
 
 timers = {}
 
+float_format = "{0:.2f}"
+
 class task_timer(threading.Timer):
   def __init__(self, delay, fn, origin, *args):
     self.delay = delay
     self.origin = origin;
-    threading.Timer.__init__(self, self.calculate_delay(), fn, args=(self, args))
+    threading.Timer.__init__(self, self.assign_interval(), fn, args=(self, args))
 
   def run(self):
     while not self.finished.wait(self.interval):
       if self.origin.enabled:
         self.function(self.origin, *self.args, **self.kwargs)
-        self.interval = self.calculate_delay()
+        self.assign_interval()
 
   def calculate_delay(self):
     if isinstance(self.delay, list):
-      return random.randrange(self.delay[0], self.delay[1])
+      return random.uniform(self.delay[0], self.delay[1])
 
     return self.delay
+
+  def assign_interval(self):
+    self.interval = self.calculate_delay()
+    self.interval_str = float_format.format(self.interval)
+    return self.interval
 
 def task_listener(delay):
   def wrapper(fn):
@@ -84,16 +91,16 @@ class torambot:
     # a normal exit won't work if the program hangs, need to do this
     os.kill(os.getpid(), signal.SIGTERM)
 
-  @task_listener(delay=[1, 5])
+  @task_listener(delay=[1, 4])
   def auto_attack_task(self, *args):
-    self.print(f"attack_task {args[0].interval}s")
+    self.print(f"attack_task {args[0].interval_str}s")
     self.window.send_keystrokes("f")
     time.sleep(random.uniform(0.15, 0.22))
     self.window.send_keystrokes("f")
 
   @task_listener(delay=[10, 18])
   def attack_1_task(self, *args):
-    self.print(f"attack_1_task {args[0].interval}s")
+    self.print(f"attack_1_task {args[0].interval_str}s")
     for x in range(random.randrange(2,4)):
       self.print("send_keystrokes('1')")
       self.window.send_keystrokes("1")
@@ -107,7 +114,7 @@ class torambot:
   @task_listener(delay=[30, 60])
   def rotate_camera(self, *args):
     direction = random.choice(["VK_LEFT", "VK_RIGHT"])
-    self.print(f"rotate_camera {direction} {args[0].interval}s")
+    self.print(f"rotate_camera {direction} {args[0].interval_str}s")
     self.window.send_keystrokes("{" + direction + " down}")
     time.sleep(random.uniform(0.8, 1))
     self.window.send_keystrokes("{" + direction + "}")
@@ -127,5 +134,5 @@ if __name__ == "__main__":
 
   # register tasks
   main.auto_attack_task()
-  main.attack_1_task()
+  #main.attack_1_task()
   main.rotate_camera()
