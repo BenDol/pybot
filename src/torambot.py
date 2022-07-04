@@ -84,14 +84,14 @@ class torambot:
     # a normal exit won't work if the program hangs, need to do this
     os.kill(os.getpid(), signal.SIGTERM)
 
-  @task_listener(delay=[1, 8])
+  @task_listener(delay=[1, 5])
   def auto_attack_task(self, *args):
     self.print(f"attack_task {args[0].interval}s")
     self.window.send_keystrokes("f")
     time.sleep(random.uniform(0.15, 0.22))
     self.window.send_keystrokes("f")
 
-  @task_listener(delay=[8, 15])
+  @task_listener(delay=[10, 18])
   def attack_1_task(self, *args):
     self.print(f"attack_1_task {args[0].interval}s")
     for x in range(random.randrange(2,4)):
@@ -106,10 +106,11 @@ class torambot:
 
   @task_listener(delay=[60, 120])
   def rotate_camera(self, *args):
-    self.print(f"rotate_camera {args[0].interval}s")
-    self.window.send_keystrokes("{VK_LEFT down}")
+    direction = random.choice(["VK_LEFT", "VK_RIGHT"])
+    self.print(f"rotate_camera {direction} {args[0].interval}s")
+    self.window.send_keystrokes("{" + direction + " down}")
     time.sleep(random.uniform(0.8, 1))
-    self.window.send_keystrokes("{VK_LEFT}")
+    self.window.send_keystrokes("{" + direction + "}")
 
 
 if __name__ == "__main__":
