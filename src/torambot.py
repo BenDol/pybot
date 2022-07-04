@@ -13,6 +13,7 @@ from pynput import mouse
 from pywinauto.application import Application
 from pywinauto import win32defines
 from functools import wraps
+from ctypes import *
 
 from util.win32 import window_current
 from util.string import string_repeat
@@ -21,6 +22,8 @@ from settings import settings as settings
 
 os.system('mode con: cols=100 lines=41')
 
+main = None
+task_classes = {}
 timers = {}
 
 float_format = "{0:.2f}"
@@ -30,10 +33,12 @@ class task_timer(threading.Timer):
     self.delay = delay
     self.origin = origin;
     threading.Timer.__init__(self, self.assign_interval(), fn, args=(self, args))
+    self.name = None
 
   def run(self):
     while not self.finished.wait(self.interval):
       if self.origin.enabled:
+        print(f" >> {self.name} {self.interval_str}")
         self.function(self.origin, *self.args, **self.kwargs)
         self.assign_interval()
 
@@ -57,6 +62,7 @@ def task_listener(delay):
         timer = task_timer(delay, fn, self, *f_args, **f_kwargs)
         timers[fn.__name__] = timer
       timer.start()
+      return timer
     return wrapped
   return wrapper
 
@@ -93,46 +99,96 @@ class torambot:
 
   @task_listener(delay=[1, 4])
   def auto_attack_task(self, *args):
-    self.print(f"attack_task {args[0].interval_str}s")
     self.window.send_keystrokes("f")
     time.sleep(random.uniform(0.15, 0.22))
     self.window.send_keystrokes("f")
 
   @task_listener(delay=[10, 18])
   def attack_1_task(self, *args):
-    self.print(f"attack_1_task {args[0].interval_str}s")
     for x in range(random.randrange(2,4)):
-      self.print("send_keystrokes('1')")
+      print("  --> send_keystrokes('1')")
       self.window.send_keystrokes("1")
       time.sleep(random.uniform(0.15, 0.22))
       self.window.send_keystrokes("1")
       time.sleep(random.uniform(1.5, 3))
     else:
       if (random.randrange(0, 100) <= 35):
+        print("  --> send_keystrokes('e')")
         self.window.send_keystrokes("e")
 
   @task_listener(delay=[30, 60])
   def rotate_camera(self, *args):
     direction = random.choice(["VK_LEFT", "VK_RIGHT"])
-    self.print(f"rotate_camera {direction} {args[0].interval_str}s")
     self.window.send_keystrokes("{" + direction + " down}")
     time.sleep(random.uniform(0.8, 1))
     self.window.send_keystrokes("{" + direction + "}")
 
+def process_tasks(tasks, parent=None):
+  if not tasks:
+    return False
+
+  for name in tasks:
+    task = tasks.get(name)
+    enabled = task.get("enabled")
+    if not enabled:
+      continue
+    # run the task
+    fqn = (parent and type(parent).__name__ + "." or "") + name
+    if parent:
+      func = getattr(parent, name)
+    else:
+      func = globals()[name]
+    if not func:
+      continue
+    timer = parent and func() or func(main)
+    if timer:
+      timer.name = fqn
+      delay = task.get("delay")
+      if delay:
+        timer.delay = delay
+      print(f" Starting {fqn}")
+      print(f"   delay: {timer.delay}")
+
+  print()
+  return True
+
+def load_main():
+  global main
+  main = task_classes.get("torambot")
+  if not main:
+    print("torambot not found, creating")
+    main = torambot()
+    task_classes["torambot"] = main
+  return main
 
 if __name__ == "__main__":
   print("")
   print(" Welcome to")
   print("                                       \n _____                   _____     _   \n|_   _|___ ___ ___ _____| __  |___| |_ \n  | | | . |  _| .\'|     | __ -| . |  _|\n  |_| |___|_| |__,|_|_|_|_____|___|_|  \n                                       ")
-  main = torambot()
+  
   print(" press F12 to quit")
   print(" press F10 to pause\n")
+
+  # register tasks
+  tasks = []
+  for name in settings:
+    parent = settings.get(name)
+    if name != "tasks":
+      if not parent.get("enabled"):
+        continue
+      # create task class
+      klass = globals()[name]
+      if klass:
+        task_classes[name] = klass()
+      process_tasks(parent.get("tasks"), task_classes[name])
+    else:
+      tasks.append(parent)
+
+  load_main()
+    
+  for task in tasks:
+    process_tasks(task)
   
   # enable listening to keyboard and mouse events
   keyboard.on_release_key('F10', main.toggle_handler)
   keyboard.on_release_key('F12', main.quit_handler)
-
-  # register tasks
-  main.auto_attack_task()
-  #main.attack_1_task()
-  main.rotate_camera()

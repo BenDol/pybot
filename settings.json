@@ -1,3 +1,19 @@
 {
-  "resolution": "native"
+  "torambot": {
+    "enabled": true,
+    "tasks": {
+      "auto_attack_task": { 
+        "enabled": true,
+        "delay": [1, 4]
+      },
+      "attack_1_task": {
+        "enabled": true,
+        "delay": [10, 18]
+      },
+      "rotate_camera": {
+        "enabled": true,
+        "delay": [30, 60]
+      }
+    }
+  }
 }
