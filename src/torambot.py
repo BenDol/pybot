@@ -7,9 +7,6 @@ import random
 import sys
 
 import keyboard
-import mouse as m
-from util.mouse import *
-from pynput import mouse
 from pywinauto.application import Application
 from pywinauto import win32defines
 from functools import wraps
@@ -93,7 +90,6 @@ class torambot:
 
   def quit_handler(self, call):
     print("\n quitting"+string_repeat(' ', 30))
-    mouse_track_end()
     # a normal exit won't work if the program hangs, need to do this
     os.kill(os.getpid(), signal.SIGTERM)
 
@@ -164,7 +160,7 @@ def load_main():
 if __name__ == "__main__":
   print("")
   print(" Welcome to")
-  print("                                       \n _____                   _____     _   \n|_   _|___ ___ ___ _____| __  |___| |_ \n  | | | . |  _| .\'|     | __ -| . |  _|\n  |_| |___|_| |__,|_|_|_|_____|___|_|  \n                                       ")
+  print(" _____                   _____     _   \n|_   _|___ ___ ___ _____| __  |___| |_ \n  | | | . |  _| .\'|     | __ -| . |  _|\n  |_| |___|_| |__,|_|_|_|_____|___|_|  \n                                       ")
   
   print(" press F12 to quit")
   print(" press F10 to pause\n")
