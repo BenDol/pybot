@@ -104,7 +104,7 @@ class torambot:
       if (random.randrange(0, 100) <= 35):
         self.window.send_keystrokes("e")
 
-  @task_listener(delay=[60, 120])
+  @task_listener(delay=[30, 60])
   def rotate_camera(self, *args):
     direction = random.choice(["VK_LEFT", "VK_RIGHT"])
     self.print(f"rotate_camera {direction} {args[0].interval}s")
@@ -119,10 +119,10 @@ if __name__ == "__main__":
   print("                                       \n _____                   _____     _   \n|_   _|___ ___ ___ _____| __  |___| |_ \n  | | | . |  _| .\'|     | __ -| . |  _|\n  |_| |___|_| |__,|_|_|_|_____|___|_|  \n                                       ")
   main = torambot()
   print(" press F12 to quit")
-  print(" press Pause to pause\n")
+  print(" press F10 to pause\n")
   
   # enable listening to keyboard and mouse events
-  keyboard.on_release_key('Pause', main.toggle_handler)
+  keyboard.on_release_key('F10', main.toggle_handler)
   keyboard.on_release_key('F12', main.quit_handler)
 
   # register tasks
