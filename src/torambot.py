@@ -101,16 +101,26 @@ class torambot:
 
   @task_listener(delay=[10, 18])
   def attack_1_task(self, *args):
-    for x in range(random.randrange(2,4)):
+    config = args[0].config
+    press_count = config.get("press_count") or [2,4]
+    for x in range(random.randrange(press_count[0],press_count[1])):
       print("  --> send_keystrokes('1')")
       self.window.send_keystrokes("1")
       time.sleep(random.uniform(0.15, 0.22))
       self.window.send_keystrokes("1")
       time.sleep(random.uniform(1.5, 3))
     else:
-      if (random.randrange(0, 100) <= 35):
-        print("  --> send_keystrokes('e')")
-        self.window.send_keystrokes("e")
+      follow_up = config.get("follow_up")
+      if not follow_up or not follow_up.get("enabled"):
+        return
+      chance = follow_up.get("chance") or 0.35
+      if random.uniform(0, 1) <= chance:
+        if follow_up.get("type") or "keystroke" == "keystroke":
+          key = follow_up.get("key") or "e"
+          fdelay = follow_up.get("delay") or [0,0]
+          time.sleep(random.uniform(fdelay[0], fdelay[1]))
+          print(f"  --> send_keystrokes('{key}')")
+          self.window.send_keystrokes(key)
 
   @task_listener(delay=[30, 60])
   def rotate_camera(self, *args):
@@ -124,8 +134,8 @@ def process_tasks(tasks, parent=None):
     return False
 
   for name in tasks:
-    task = tasks.get(name)
-    enabled = task.get("enabled")
+    task_config = tasks.get(name)
+    enabled = task_config.get("enabled")
     if not enabled:
       continue
     # run the task
@@ -139,9 +149,11 @@ def process_tasks(tasks, parent=None):
     timer = parent and func() or func(main)
     if timer:
       timer.name = fqn
-      delay = task.get("delay")
+      timer.config = task_config
+      delay = task_config.get("delay")
       if delay:
         timer.delay = delay
+        timer.interval = delay
       print(f" Starting {fqn}")
       print(f"   delay: {timer.delay}")
 
@@ -162,8 +174,13 @@ if __name__ == "__main__":
   print(" Welcome to")
   print(" _____                   _____     _   \n|_   _|___ ___ ___ _____| __  |___| |_ \n  | | | . |  _| .\'|     | __ -| . |  _|\n  |_| |___|_| |__,|_|_|_|_____|___|_|  \n                                       ")
   
-  print(" press F12 to quit")
-  print(" press F10 to pause\n")
+  keybinds = settings["keybinds"]
+
+  # enable listening to keyboard and mouse events
+  for action in keybinds:
+    key = keybinds[action]
+    print(f" press {key} to {action}")
+  print()
 
   # register tasks
   tasks = []
@@ -184,7 +201,6 @@ if __name__ == "__main__":
     
   for task in tasks:
     process_tasks(task)
-  
-  # enable listening to keyboard and mouse events
-  keyboard.on_release_key('F10', main.toggle_handler)
-  keyboard.on_release_key('F12', main.quit_handler)
+
+  keyboard.on_release_key(keybinds["pause"], main.toggle_handler)
+  keyboard.on_release_key(keybinds["quit"],  main.quit_handler)

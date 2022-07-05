@@ -8,12 +8,24 @@
       },
       "attack_1_task": {
         "enabled": true,
-        "delay": [10, 18]
+        "delay": [10, 18],
+        "press_count": [2, 4],
+        "follow_up": {
+          "enabled": true,
+          "type": "keystroke",
+          "key": "e",
+          "chance": 0.35,
+          "delay": [0, 0]
+        }
       },
       "rotate_camera": {
         "enabled": true,
         "delay": [30, 60]
       }
     }
+  },
+  "keybinds": {
+    "pause": "F10",
+    "quit":  "F12"
   }
 }
