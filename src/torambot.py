@@ -11,6 +11,7 @@ from pywinauto.application import Application
 from pywinauto import win32defines
 from functools import wraps
 from ctypes import *
+from PIL import Image
 
 from util.win32 import window_current
 from util.string import string_repeat
@@ -26,16 +27,18 @@ timers = {}
 float_format = "{0:.2f}"
 
 class task_timer(threading.Timer):
-  def __init__(self, delay, fn, origin, *args):
+  def __init__(self, delay, fn, origin, silent = False, *args):
     self.delay = delay
-    self.origin = origin;
+    self.origin = origin
+    self.silent = silent
     threading.Timer.__init__(self, self.assign_interval(), fn, args=(self, args))
     self.name = None
 
   def run(self):
     while not self.finished.wait(self.interval):
       if self.origin.enabled:
-        print(f" >> {self.name} {self.interval_str}")
+        if not self.silent:
+          print(f" >> {self.name} {self.interval_str}")
         self.function(self.origin, *self.args, **self.kwargs)
         self.assign_interval()
 
@@ -50,13 +53,13 @@ class task_timer(threading.Timer):
     self.interval_str = float_format.format(self.interval)
     return self.interval
 
-def task_listener(delay):
+def task_listener(delay, silent=False):
   def wrapper(fn):
     @wraps(fn)
     def wrapped(self, *f_args, **f_kwargs):
       timer = timers.get(fn.__name__)
       if not timer:
-        timer = task_timer(delay, fn, self, *f_args, **f_kwargs)
+        timer = task_timer(delay, fn, self, silent, *f_args, **f_kwargs)
         timers[fn.__name__] = timer
       timer.start()
       return timer
@@ -106,7 +109,7 @@ class torambot:
     for x in range(random.randrange(press_count[0],press_count[1])):
       print("  --> send_keystrokes('1')")
       self.window.send_keystrokes("1")
-      time.sleep(random.uniform(0.15, 0.22))
+      time.sleep(random.uniform(0.21, 0.32))
       self.window.send_keystrokes("1")
       time.sleep(random.uniform(1.5, 3))
     else:
@@ -128,6 +131,24 @@ class torambot:
     self.window.send_keystrokes("{" + direction + " down}")
     time.sleep(random.uniform(0.8, 1))
     self.window.send_keystrokes("{" + direction + "}")
+
+  @task_listener(delay=0.8, silent=True)
+  def info_gathering(self, *args):
+    self.window.set_focus()
+    img = self.window.capture_as_image()
+    img.save("test.png")
+    coord = x, y = 954, 944
+    pixel = img.getpixel(coord)
+    print(pixel)
+    #R:104,G:234,B:212
+
+    if (is_within(pixel[0], 23, 15) and is_within(pixel[1], 31, 15) and is_within(pixel[2], 26, 15)):
+      self.window.send_keystrokes("e")
+
+
+#a is with b +- range
+def is_within(a, b, rng):
+  return a >= (b - rng) and a <= (b + rng)
 
 def process_tasks(tasks, parent=None):
   if not tasks:
@@ -167,7 +188,10 @@ def load_main():
     print("torambot not found, creating")
     main = torambot()
     task_classes["torambot"] = main
+
+  main.info_gathering()
   return main
+
 
 if __name__ == "__main__":
   print("")
