@@ -1,31 +1,47 @@
 {
-  "torambot": {
-    "enabled": true,
-    "tasks": {
-      "auto_attack_task": { 
-        "enabled": false,
-        "delay": [1, 3]
-      },
-      "attack_1_task": {
-        "enabled": true,
-        "delay": [4, 6],
-        "press_count": [2, 4],
-        "follow_up": {
-          "enabled": false,
-          "type": "keystroke",
-          "key": "e",
-          "chance": 0.90,
-          "delay": [2, 3]
-        }
-      },
-      "rotate_camera": {
-        "enabled": false,
-        "delay": [30, 60]
-      }
-    }
-  },
   "keybinds": {
     "pause": "F10",
     "quit":  "F12"
+  },
+  "scripts": {
+    "auto_attack": {
+      "enabled": true,
+      "verbose": false,
+      "tasks": {
+        "attack": {
+          "enabled": true,
+          "delay": [1, 3],
+          "key": "f"
+        }
+      }
+    },
+    "unstuck": {
+      "enabled": true,
+      "verbose": false,
+      "tasks": {
+        "rotate_camera": {
+          "enabled": true,
+          "delay": [30, 60]
+        }
+      }
+    },
+    "attack1": {
+      "enabled": true,
+      "verbose": false,
+      "tasks": {
+        "attack": {
+          "enabled": true,
+          "delay": [4, 6],
+          "press_count": [2, 4],
+          "follow_up": {
+            "enabled": true,
+            "type": "keystroke",
+            "key": "e",
+            "chance": 0.90,
+            "delay": [2, 3]
+          }
+        }
+      }
+    }
   }
 }
