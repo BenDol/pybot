@@ -8,7 +8,7 @@ from tasks import task
 
 class Unstuck(Script):
   def __init__(self, parent, config):
-    Script.__init__(self, parent, config, __name__)
+    super().__init__(parent, config, __name__)
 
   def load(self):
     Script.load(self)

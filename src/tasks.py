@@ -13,13 +13,14 @@ float_format = "{0:.2f}"
 configs = {}
 timers = {}
 all_globals = globals()
+main = None
 
 class task_timer(threading.Timer):
   def __init__(self, delay, fn, origin, silent = False, *args):
     self.delay = delay
     self.origin = origin
     self.silent = silent
-    threading.Timer.__init__(self, self.assign_interval(), fn, args=(self, args))
+    super().__init__(self.assign_interval(), fn, args=(self, args))
     self.name = None
 
   def run(self):
@@ -94,7 +95,12 @@ def process(tasks, parent=None):
       func = all_globals[name]
     if not func:
       continue
-    timer = parent and func() or func(main)
+
+    if parent:
+      timer = func()
+    else:
+      timer = func(main)
+
     if timer:
       timer.name = fqn
       timer.config = task_config

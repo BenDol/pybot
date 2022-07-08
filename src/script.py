@@ -11,6 +11,7 @@ class Script(object):
     self.name = type(self).__name__
     self.namespace = namespace
     self.parent = parent
+    self.game = parent.game
     self.config = config
     self.enabled = False
     self.tasks = {}
@@ -34,7 +35,7 @@ class Script(object):
     self.print(f"Starting {self.name}", False)
     for task in self.tasks:
       task.start()
-      print(f"  -> Task {task.name}")
+      print(f"  -> Task '{task.name}'")
       print(f"     Delay: {task.delay}")
 
   def stop(self):
@@ -55,4 +56,4 @@ class Script(object):
   def send_keystrokes(self, key, delay=[]):
     if delay:
       time.sleep(random.uniform(delay[0], delay[1]))
-    self.parent.window.send_keystrokes(key)
+    self.game.window.send_keystrokes(key)

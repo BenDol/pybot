@@ -14,6 +14,8 @@ import tasks
 from tasks import task
 from settings import settings as settings
 from script import Script
+from game import Game
+from game import ToramGame
 
 # extern
 import keyboard
@@ -34,17 +36,17 @@ os.system('mode con: cols=100 lines=41')
 sys.path.append("scripts")
 
 main = None
+game_class = ToramGame
 
 class Torambot:
   def __init__(self):
     self.enabled = True
     self.settings = settings
     self.name = "ToramOnline"
-    self.app = Application(backend="win32").connect(title=self.name, timeout=10)
-    self.window = self.app.window(title=self.name)
+    self.game = game_class(settings["game"])
     self.scripts = []
     self.keybinds = {}
-    #print(self.window.write_to_xml("test.xml"))
+    tasks.main = self
 
   def is_active(self):
     return self.name in win32.window_current()
@@ -73,9 +75,17 @@ class Torambot:
       print(f" press {key} to {action}")
     print()
 
+    # Load game
+    self.game.load()
+
+    # Load scripts
     self.load_scripts()
 
   def start(self):
+    # Start game
+    self.game.start()
+
+    # Start scripts
     self.start_scripts()
 
   def load_scripts(self):
