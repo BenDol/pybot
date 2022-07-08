@@ -58,24 +58,6 @@ def task(delay, silent=False):
 def add_globals(globs):
   all_globals.update(globs)
 
-# load tasks and return late load tasks for loading after main
-def load():
-  tasks = []
-  for name in settings:
-    parent = settings.get(name)
-    if name != "tasks":
-      if not parent.get("enabled"):
-        continue
-      # create task class
-      klass = all_globals[name]
-      if klass:
-        configs[name] = klass()
-      process(parent.get("tasks"), configs[name])
-    else:
-      tasks.append(parent)
-
-  return tasks
-
 def process(tasks, parent=None):
   if not tasks:
     return None

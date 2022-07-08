@@ -52,11 +52,18 @@ class Torambot:
     return self.name in win32.window_current()
 
   def toggle(self, *args):
-    self.enabled = not self.enabled
-    if self.enabled:
+    self.enable(not self.enabled)
+
+  def enable(self, enabled):
+    if enabled:
       print(" Enabled"+string_repeat(' ', 20))
     else:
       print(" Disabled"+string_repeat(' ', 20))
+
+    self.enabled = enabled
+    self.game.enabled = enabled
+    for script in self.scripts:
+      script.enabled = enabled
 
   def quit(self, *args):
     print(" >> Quitting"+string_repeat(' ', 20))
