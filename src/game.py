@@ -49,6 +49,9 @@ class Game(object):
       print(f"  -> Task '{task.name}'")
       print(f"     Delay: {task.delay}")
 
+  def is_active(self):
+    return self.name in win32.window_current()
+
   def scan(self, *args):
     self.screen_capture, result = win32.capture_screen(self.name)
     #if result:

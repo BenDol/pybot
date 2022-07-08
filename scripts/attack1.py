@@ -19,7 +19,7 @@ class Attack1(Script):
   @task(delay=[10,18])
   def attack(self, *args):
     while self.game.data.get("mana") and self.game.data.get("mana") < 42:
-      print(self.game.data["mana"])
+      #print(self.game.data["mana"])
       self.send_keystrokes("e")
       time.sleep(random.uniform(8, 9))
     

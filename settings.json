@@ -31,15 +31,7 @@
       "tasks": {
         "attack": {
           "enabled": true,
-          "delay": [0.3, 0.6],
-          "press_count": [2, 4],
-          "follow_up": {
-            "enabled": false,
-            "type": "keystroke",
-            "key": "e",
-            "chance": 0.90,
-            "delay": [2, 3]
-          }
+          "delay": [0.3, 0.6]
         }
       }
     }

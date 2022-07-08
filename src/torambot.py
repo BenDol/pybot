@@ -38,18 +38,17 @@ sys.path.append("scripts")
 main = None
 game_class = ToramGame
 
-class Torambot:
+class Main:
   def __init__(self):
     self.enabled = True
     self.settings = settings
-    self.name = "ToramOnline"
     self.game = game_class(settings["game"])
     self.scripts = []
     self.keybinds = {}
     tasks.main = self
 
   def is_active(self):
-    return self.name in win32.window_current()
+    return self.game.is_active()
 
   def toggle(self, *args):
     self.enable(not self.enabled)
@@ -62,6 +61,7 @@ class Torambot:
 
     self.enabled = enabled
     self.game.enabled = enabled
+    
     for script in self.scripts:
       script.enabled = enabled
 
@@ -126,21 +126,12 @@ class Torambot:
     print(f" Started {count} scripts")
     print()
 
-  #@task_event(delay=0.8, silent=True)
-  def info_gathering(self, *args):
-    img, result = win32.capture_screen(self.name)
-    coord = x, y = 954, 944
-    pixel = img.getpixel(coord)
-    target_rgb = [104, 234, 212]
-    if (color.is_match(pixel, target_rgb, 15)):
-      self.window.send_keystrokes("e")
-
 
 if __name__ == "__main__":
   print("")
   print(" Welcome to")
   print(" _____                   _____     _   \n|_   _|___ ___ ___ _____| __  |___| |_ \n  | | | . |  _| .\'|     | __ -| . |  _|\n  |_| |___|_| |__,|_|_|_|_____|___|_|  \n                                       ")
 
-  main = Torambot()
+  main = Main()
   main.load()
   main.start()

@@ -27,7 +27,7 @@ class task_timer(threading.Timer):
     while not self.finished.wait(self.interval):
       if self.origin.enabled:
         if not self.silent:
-          print(f" >> {self.name} {self.interval_str}")
+          print(f" >> {self.name} {self.interval_str}s")
         self.function(self.origin, *self.args, **self.kwargs)
         self.assign_interval()
 
