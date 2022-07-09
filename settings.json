@@ -15,24 +15,30 @@
         }
       }
     },
-    "unstuck": {
-      "enabled": false,
-      "verbose": false,
-      "tasks": {
-        "rotate_camera": {
-          "enabled": true,
-          "delay": [30, 60]
-        }
-      }
-    },
     "attack1": {
       "enabled": true,
       "verbose": false,
       "tasks": {
         "attack": {
           "enabled": true,
-          "delay": [0.3, 0.6]
+          "delay": [0.3, 0.6],
+          "components": [{
+            "name": "ManaAttackTaskComponent",
+            "config": {
+              "enabled": true
+            }
+          }]
         }
+      }
+    }
+  },
+  "unstuck": {
+    "enabled": false,
+    "verbose": false,
+    "tasks": {
+      "rotate_camera": {
+        "enabled": true,
+        "delay": [30, 60]
       }
     }
   },

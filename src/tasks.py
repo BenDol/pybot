@@ -6,30 +6,52 @@ import random
 from functools import wraps
 
 # core
+import components
 from settings import settings as settings
 
 float_format = "{0:.2f}"
 
 configs = {}
-timers = {}
-all_globals = globals()
+tasks = {}
+globes = globals()
 main = None
 
-class task_timer(threading.Timer):
-  def __init__(self, delay, fn, origin, silent = False, *args):
+class Task(threading.Timer):
+  def __init__(self, delay, fn, origin, name, silent=False, *args):
+    self.interval_str = None
+    self.finished = None
     self.delay = delay
     self.origin = origin
     self.silent = silent
+    self.running = False
     super().__init__(self.assign_interval(), fn, args=(self, args))
-    self.name = None
+    self.name = name
+    self.components = []
 
   def run(self):
     while not self.finished.wait(self.interval):
+      self.running = self.origin.enabled
       if self.origin.enabled:
         if not self.silent:
           print(f" >> {self.name} {self.interval_str}s")
+
+        for c in self.components:
+          if c.enabled:
+            c.update(self)
+
         self.function(self.origin, *self.args, **self.kwargs)
+
+        for c in self.components:
+          if c.enabled:
+            c.post_update(self)
+
         self.assign_interval()
+    else:
+      self.running = False
+
+  def cancel(self):
+    super().cancel()
+    self.running = False
 
   def calculate_delay(self):
     if isinstance(self.delay, list):
@@ -42,28 +64,30 @@ class task_timer(threading.Timer):
     self.interval_str = float_format.format(self.interval)
     return self.interval
 
+
 def task(delay, silent=False):
   def wrapper(fn):
     @wraps(fn)
     def wrapped(self, *f_args, **f_kwargs):
       fqn = type(self).__name__ + "." + fn.__name__
-      timer = timers.get(fqn)
-      if not timer:
-        timer = task_timer(delay, fn, self, silent, *f_args, **f_kwargs)
-        timers[fn.__name__] = timer
-      return timer
+      task = tasks.get(fqn)
+      if not task:
+        task = Task(delay, fn, self, fqn, silent, *f_args, **f_kwargs)
+        tasks[fn.__name__] = task
+      return task
     return wrapped
   return wrapper
 
+
 def add_globals(globs):
-  all_globals.update(globs)
+  globes.update(globs)
+
 
 def process(tasks, parent=None):
   if not tasks:
     return None
 
-  timers = []
-
+  instances = []
   for name in tasks:
     task_config = tasks.get(name)
     enabled = task_config.get("enabled")
@@ -74,21 +98,42 @@ def process(tasks, parent=None):
     if parent:
       func = getattr(parent, name)
     else:
-      func = all_globals[name]
+      func = globes[name]
     if not func:
       continue
 
     if parent:
-      timer = func()
+      task = func()
     else:
-      timer = func(main)
+      task = func(main)
 
-    if timer:
-      timer.name = fqn
-      timer.config = task_config
-      delay = task_config.get("delay")
-      if delay:
-        timer.delay = delay
-        timer.assign_interval()
-      timers.append(timer)
-  return timers
+    if not task:
+      continue
+    task.config = task_config
+    delay = task_config.get("delay")
+    if delay:
+      task.delay = delay
+      task.assign_interval()
+
+    # load components
+    comp_list = task_config.get("components")
+    if (comp_list):
+      for c in comp_list:
+        components.add(task, c["name"], c["config"] or {})
+
+    instances.append(task)
+  return instances
+
+def task_running(name):
+  task = get_task(name)
+  return task and task.running
+
+def task_exists(name):
+  return get_task(name) is not None
+
+def task_enabled(name):
+  task = get_task(name)
+  return task and task.enabled
+
+def get_task(name):
+  return tasks.get(name)

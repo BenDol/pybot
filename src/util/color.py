@@ -1,5 +1,7 @@
-import util.math as math
+import util.number as number
 
-# is rgba a match of rgbb with a tolerance (tol) setting
-def is_match(rgba, rgbb, tol):
-  return math.is_within(rgba[0], rgbb[0], tol) and math.is_within(rgba[1], rgbb[1], tol) and math.is_within(rgba[2], rgbb[2], tol)
+# is rgb_a a match of rgb_b with a tolerance (tol) setting
+def is_match(rgb_a, rgb_b, tol):
+  return number.is_within(rgb_a[0], rgb_b[0], tol) and \
+         number.is_within(rgb_a[1], rgb_b[1], tol) and \
+         number.is_within(rgb_a[2], rgb_b[2], tol)

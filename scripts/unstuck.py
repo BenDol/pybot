@@ -16,7 +16,7 @@ class Unstuck(Script):
   def unload(self):
     Script.load(self)
 
-  @task(delay=[30,60])
+  @task(delay=[30, 60])
   def rotate_camera(self, *args):
     task = args[0]
     direction = random.choice(["VK_LEFT", "VK_RIGHT"])

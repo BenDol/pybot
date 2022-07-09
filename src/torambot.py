@@ -1,35 +1,22 @@
 # system
 import os
 import signal
-import threading
-import time
-import datetime
-import random
 import sys
 import inspect
 import importlib
 
 # core
 import tasks
-from tasks import task
+import components
 from settings import settings as settings
 from script import Script
-from game import Game
 from game import ToramGame
 
 # extern
 import keyboard
-from pywinauto.application import Application
-from pywinauto import win32defines
-from ctypes import *
-from PIL import Image
 
 # utils
 from util.string import string_repeat
-import util.win32 as win32
-import util.math as math
-import util.color as color
-import util.common as common
 
 os.system('mode con: cols=100 lines=41')
 
@@ -50,23 +37,23 @@ class Main:
   def is_active(self):
     return self.game.is_active()
 
-  def toggle(self, *args):
-    self.enable(not self.enabled)
-
   def enable(self, enabled):
     if enabled:
-      print(" Enabled"+string_repeat(' ', 20))
+      print(" Enabled" + string_repeat(' ', 20))
     else:
-      print(" Disabled"+string_repeat(' ', 20))
+      print(" Disabled" + string_repeat(' ', 20))
 
     self.enabled = enabled
     self.game.enabled = enabled
-    
+
     for script in self.scripts:
       script.enabled = enabled
 
+  def toggle(self, *args):
+    self.enable(not self.enabled)
+
   def quit(self, *args):
-    print(" >> Quitting"+string_repeat(' ', 20))
+    print(" >> Quitting" + string_repeat(' ', 20))
     print()
     # a normal exit won't work if the program hangs, need to do this
     os.kill(os.getpid(), signal.SIGTERM)
@@ -84,6 +71,9 @@ class Main:
 
     # Load game
     self.game.load()
+
+    # load components
+    components.load()
 
     # Load scripts
     self.load_scripts()
@@ -105,9 +95,7 @@ class Main:
       module = importlib.import_module(name)
       # load script classes
       for name, obj in inspect.getmembers(module):
-        if obj is Script:
-          continue
-        if not inspect.isclass(obj) or not issubclass(obj, Script):
+        if obj is Script or not inspect.isclass(obj) or not issubclass(obj, Script):
           continue
 
         script = obj(self, config)
@@ -121,7 +109,7 @@ class Main:
     for script in self.scripts:
       if script.enabled:
         script.start()
-        count+=1
+        count += 1
     print()
     print(f" Started {count} scripts")
     print()
