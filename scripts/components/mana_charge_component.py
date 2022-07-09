@@ -13,6 +13,8 @@ class ManaChargeTaskComponent(TaskComponent):
     self.post_delay = self.config.get("post_delay") or [8, 9]
 
   def update(self, task):
+    super().update(task)
+
     game = task.origin.game
     while game.data.get("mana") and game.data.get("mana") < self.mana:
       #print(game.data["mana"])
@@ -20,4 +22,4 @@ class ManaChargeTaskComponent(TaskComponent):
       time.sleep(random.uniform(self.post_delay[0], self.post_delay[1]))
 
   def post_update(self, task):
-    pass
+    super().post_update(task)

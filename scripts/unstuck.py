@@ -18,8 +18,4 @@ class Unstuck(Script):
 
   @task(delay=[30, 60])
   def rotate_camera(self, *args):
-    task = args[0]
-    direction = random.choice(["VK_LEFT", "VK_RIGHT"])
-    self.send_keystrokes("{" + direction + " down}")
-    time.sleep(random.uniform(0.8, 1))
-    self.send_keystrokes("{" + direction + "}")
+    pass

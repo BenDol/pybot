@@ -35,15 +35,9 @@ class Task(threading.Timer):
         if not self.silent:
           print(f" >> {self.name} {self.interval_str}s")
 
-        for c in self.components:
-          if c.enabled:
-            c.update(self)
-
+        self.components_update()
         self.function(self.origin, *self.args, **self.kwargs)
-
-        for c in self.components:
-          if c.enabled:
-            c.post_update(self)
+        self.components_post_update()
 
         self.assign_interval()
     else:
@@ -63,6 +57,26 @@ class Task(threading.Timer):
     self.interval = self.calculate_delay()
     self.interval_str = float_format.format(self.interval)
     return self.interval
+
+  def components_update(self):
+    for c in self.components:
+      if not c.enabled:
+        continue
+      if c.parallel:
+        thread = threading.Thread(target=lambda: c.update(self))
+        thread.start()
+      else:
+        c.update(self)
+
+  def components_post_update(self):
+    for c in self.components:
+      if not c.enabled:
+        continue
+      if c.parallel:
+        thread = threading.Thread(target=lambda: c.post_update(self))
+        thread.start()
+      else:
+        c.post_update(self)
 
 
 def task(delay, silent=False):

@@ -18,7 +18,4 @@ class AutoAttack(Script):
 
   @task(delay=[1,3])
   def attack(self, *args):
-    task = args[0]
-    key = self.config_value("key", "f", task.config)
-    self.send_keystrokes(key)
-    self.send_keystrokes(key, [0.15, 0.22])
+    pass

@@ -34,6 +34,7 @@ class Component(object):
 class TaskComponent(Component):
   def __init__(self, config):
     super().__init__(config)
+    self.parallel = config.get("parallel") or False
 
   def load(self):
     super().load()
@@ -67,10 +68,9 @@ def load(path="scripts/components"):
     loaded = True
 
 def add(owner, component_name, indent=1, *args):
-  indent_str = string.repeat(' ', indent)
   clazz = classes[component_name]
   if not clazz:
-    print(f"{indent_str}Component '{component_name}' not found")
+    print(f"{string.indent(indent)}Component '{component_name}' not found")
     return None
 
   comp = clazz(*args)
@@ -81,7 +81,7 @@ def add(owner, component_name, indent=1, *args):
     throw_no_components()
 
   owner.components.append(comp)
-  print(f"{indent_str}Added component '{component_name}' to {owner}")
+  print(f"{string.indent(indent)}Added component '{component_name}' to {owner}")
   return comp
 
 def get(owner, component_name):

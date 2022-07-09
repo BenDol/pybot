@@ -11,7 +11,16 @@
         "attack": {
           "enabled": true,
           "delay": [1, 3],
-          "key": "f"
+          "components": [{
+            "name": "KeyPressTaskComponent",
+            "config": {
+              "enabled": true,
+              "key": "f",
+              "presses": 2,
+              "delay": [0.15, 0.22],
+              "post_delay": [0, 0]
+            }
+          }]
         }
       }
     },
@@ -23,6 +32,12 @@
           "enabled": true,
           "delay": [0.3, 0.6],
           "components": [{
+            "name": "TestTaskComponent",
+            "config": {
+              "enabled": false,
+              "parallel": true
+            }
+          },{
             "name": "ManaChargeTaskComponent",
             "config": {
               "enabled": true,
@@ -42,15 +57,24 @@
           }]
         }
       }
-    }
-  },
-  "unstuck": {
-    "enabled": false,
-    "verbose": false,
-    "tasks": {
-      "rotate_camera": {
-        "enabled": true,
-        "delay": [30, 60]
+    },
+    "unstuck": {
+      "enabled": false,
+      "verbose": false,
+      "tasks": {
+        "rotate_camera": {
+          "enabled": true,
+          "delay": [30, 60],
+          "components": [{
+            "name": "KeyPressTaskComponent",
+            "config": {
+              "enabled": true,
+              "key": ["VK_LEFT", "VK_RIGHT"],
+              "hold": true,
+              "delay": [0.8, 1]
+            }
+          }]
+        }
       }
     }
   },
