@@ -32,6 +32,12 @@ class TaskComponent(Component):
   def __init__(self, config):
     super().__init__(config)
 
+  def load(self):
+    super().load()
+
+  def unload(self):
+    super().unload()
+
   def update(self, task):
     super().update()
 
@@ -41,6 +47,7 @@ class TaskComponent(Component):
 def load(path="scripts/components"):
   for file_name in os.listdir(path):
     module_name = file_name.replace(".py", "")
+    print(module_name)
     module = importlib.import_module(module_name)
     if module:
       modules.append(module)
@@ -48,7 +55,7 @@ def load(path="scripts/components"):
     # load script classes
     for name, obj in inspect.getmembers(module):
       if not inspect.isclass(obj):
-        return
+        continue
       if obj is Component or not issubclass(obj, Component):
         continue
       if obj is TaskComponent or not issubclass(obj, TaskComponent):

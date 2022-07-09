@@ -23,9 +23,21 @@
           "enabled": true,
           "delay": [0.3, 0.6],
           "components": [{
-            "name": "ManaAttackTaskComponent",
+            "name": "ManaChargeTaskComponent",
             "config": {
-              "enabled": true
+              "enabled": true,
+              "key": "e",
+              "mana": 42,
+              "post_delay": [8, 9]
+            }
+          },{
+            "name": "KeyPressTaskComponent",
+            "config": {
+              "enabled": true,
+              "key": "1",
+              "presses": 2,
+              "delay": [0.21, 0.32],
+              "post_delay": [2, 4]
             }
           }]
         }
