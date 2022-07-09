@@ -16,7 +16,7 @@ from game import ToramGame
 import keyboard
 
 # utils
-from util.string import string_repeat
+import util.string as string
 
 os.system('mode con: cols=100 lines=41')
 
@@ -39,9 +39,9 @@ class Main:
 
   def enable(self, enabled):
     if enabled:
-      print(" Enabled" + string_repeat(' ', 20))
+      print(" Enabled" + string.repeat(' ', 20))
     else:
-      print(" Disabled" + string_repeat(' ', 20))
+      print(" Disabled" + string.repeat(' ', 20))
 
     self.enabled = enabled
     self.game.enabled = enabled
@@ -53,7 +53,7 @@ class Main:
     self.enable(not self.enabled)
 
   def quit(self, *args):
-    print(" >> Quitting" + string_repeat(' ', 20))
+    print(" >> Quitting" + string.repeat(' ', 20))
     print()
     # a normal exit won't work if the program hangs, need to do this
     os.kill(os.getpid(), signal.SIGTERM)

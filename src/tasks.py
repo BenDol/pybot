@@ -119,7 +119,7 @@ def process(tasks, parent=None):
     comp_list = task_config.get("components")
     if (comp_list):
       for c in comp_list:
-        components.add(task, c["name"], c["config"] or {})
+        components.add(task, c["name"], 3, c["config"] or {})
 
     instances.append(task)
   return instances

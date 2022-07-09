@@ -4,6 +4,9 @@ import sys
 import inspect
 import importlib
 
+# util
+import util.string as string
+
 loaded = False
 modules = []
 classes = {}
@@ -47,7 +50,6 @@ class TaskComponent(Component):
 def load(path="scripts/components"):
   for file_name in os.listdir(path):
     module_name = file_name.replace(".py", "")
-    print(module_name)
     module = importlib.import_module(module_name)
     if module:
       modules.append(module)
@@ -64,10 +66,11 @@ def load(path="scripts/components"):
   else:
     loaded = True
 
-def add(owner, component_name, *args):
+def add(owner, component_name, indent=1, *args):
+  indent_str = string.repeat(' ', indent)
   clazz = classes[component_name]
   if not clazz:
-    print(f" Component '{component_name}' not found")
+    print(f"{indent_str}Component '{component_name}' not found")
     return None
 
   comp = clazz(*args)
@@ -78,7 +81,7 @@ def add(owner, component_name, *args):
     throw_no_components()
 
   owner.components.append(comp)
-  print(f" Added component '{component_name}' to {owner}")
+  print(f"{indent_str}Added component '{component_name}' to {owner}")
   return comp
 
 def get(owner, component_name):

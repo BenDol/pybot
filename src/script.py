@@ -23,12 +23,12 @@ class Script(object):
     print(f" Loading {self.name}")
     self.enabled = self.config.get("enabled")
     self.verbose = self.config.get("verbose")
-    
+
     # load components
     comp_list = self.config.get("components")
     if (comp_list):
       for c in comp_list:
-        components.add(self, c["name"], c["config"] or {})
+        components.add(self, c["name"], 3, c["config"] or {})
 
     # load tasks
     t = self.config.get("tasks")
