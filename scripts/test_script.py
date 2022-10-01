@@ -6,16 +6,16 @@ import time
 from script import Script
 from tasks import task
 
-class AutoAttack(Script):
+class Test(Script):
   def __init__(self, parent, config):
     super().__init__(parent, config, __name__)
 
   def load(self):
-    Script.load(self)
+    super().load()
 
   def unload(self):
-    Script.load(self)
+    super().unload()
 
   @task(delay=[1,3])
-  def attack(self, *args):
-    pass
+  def move(self, *args):
+    return False

@@ -1,90 +1,40 @@
 {
-  "keybinds": {
-    "pause": "F10",
-    "quit":  "F12"
-  },
-  "scripts": {
-    "auto_attack": {
-      "enabled": false,
-      "verbose": false,
-      "tasks": {
-        "attack": {
-          "enabled": true,
-          "delay": [1, 3],
-          "components": [{
-            "name": "KeyPressTaskComponent",
-            "config": {
-              "enabled": true,
-              "key": "f",
-              "presses": 2,
-              "delay": [0.15, 0.22],
-              "post_delay": [0, 0]
-            }
-          }]
-        }
-      }
-    },
-    "attack1": {
-      "enabled": true,
-      "verbose": false,
-      "tasks": {
-        "attack": {
-          "enabled": true,
-          "delay": [0.3, 0.6],
-          "components": [{
-            "name": "TestTaskComponent",
-            "config": {
-              "enabled": false,
-              "parallel": true
-            }
-          },{
-            "name": "ManaChargeTaskComponent",
-            "config": {
-              "enabled": true,
-              "key": "e",
-              "mana": 42,
-              "post_delay": [8, 9]
-            }
-          },{
-            "name": "KeyPressTaskComponent",
-            "config": {
-              "enabled": true,
-              "key": "1",
-              "presses": 2,
-              "delay": [0.21, 0.32],
-              "post_delay": [2, 4]
-            }
-          }]
-        }
-      }
-    },
-    "unstuck": {
-      "enabled": false,
-      "verbose": false,
-      "tasks": {
-        "rotate_camera": {
-          "enabled": true,
-          "delay": [30, 60],
-          "components": [{
-            "name": "KeyPressTaskComponent",
-            "config": {
-              "enabled": true,
-              "key": ["VK_LEFT", "VK_RIGHT"],
-              "hold": true,
-              "delay": [0.8, 1]
-            }
-          }]
-        }
-      }
-    }
-  },
   "game": {
-    "title": "ToramOnline",
+    "title": "RuneLite - Bonfry",
     "tasks": {
       "scan": {
         "enabled": true,
         "delay": 0.5
       }
     }
+  },
+
+  "keybinds": {
+    "pause": "F10",
+    "quit":  "F12"
+  },
+
+  "scripts": {
+
+    "test_script": {
+      "enabled": true,
+      "verbose": false,
+      "tasks": {
+        "move": {
+          "enabled": true,
+          "delay": [1, 3],
+          "components": [{
+            "name": "MouseMoveTaskComponent",
+            "config": {
+              "enabled": true,
+              "pos": [300, 300],
+              "delay": [0.15, 0.22],
+              "post_delay": [0, 0]
+            }
+          }]
+        }
+      }
+    }
+
   }
 }

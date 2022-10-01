@@ -24,6 +24,10 @@ class Task(threading.Timer):
     self.origin = origin
     self.silent = silent
     self.running = False
+    if hasattr(origin, 'game'):
+      self.game = origin.game
+    else:
+      print(" ERROR: No game object found in origin!")
     super().__init__(self.assign_interval(), fn, args=(self, args))
     self.name = name
     self.components = []
@@ -35,9 +39,9 @@ class Task(threading.Timer):
         if not self.silent:
           print(f" >> {self.name} {self.interval_str}s")
 
-        self.components_update()
-        self.function(self.origin, *self.args, **self.kwargs)
-        self.components_post_update()
+        if self.function(self.origin, *self.args, **self.kwargs):
+          self.components_update()
+          self.components_post_update()
 
         self.assign_interval()
     else:

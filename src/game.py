@@ -1,9 +1,11 @@
 # extern
+import pywinauto
 from pywinauto.application import Application
 
 # core
 import tasks
 from tasks import task
+from mouse import PyWinMouse
 
 # util
 import util.win32 as win32
@@ -18,6 +20,7 @@ class Game(object):
     self.tasks = None
     self.app = None
     self.window = None
+    self.mouse = None
     self.screen_capture = None
     # print(self.window.write_to_xml("test.xml"))
 
@@ -26,6 +29,8 @@ class Game(object):
     # Attach to application
     self.app = Application(backend="win32").connect(title=self.name, timeout=10)
     self.window = self.app.window(title=self.name)
+    if not self.mouse:
+      self.mouse = PyWinMouse(pywinauto.mouse)
 
     if self.window:
       print(f" Successfully attached!")
@@ -49,6 +54,26 @@ class Game(object):
     self.screen_capture, result = win32.capture_screen(self.name)
     # if result:
     #  self.screen_capture.save("testing.png")
+
+  def send_keystrokes(self, key, delay=None):
+    if delay:
+      time.sleep(random.uniform(delay[0], delay[1]))
+    self.window.send_keystrokes(key)
+
+  def mouse_move(self, xy, delay=None):
+    self.mouse.move(coords=xy)
+
+  def mouse_click(self, button='left', delay=None):
+    self.mouse.click(button, delay)
+
+
+class RunescapeGame(Game):
+  def __init__(self, config):
+    super().__init__(config)
+
+  @task(delay=0.5, silent=True)
+  def scan(self, *args):
+    Game.scan(self, *args)
 
 
 class ToramGame(Game):

@@ -10,7 +10,7 @@ import tasks
 import components
 from settings import settings as settings
 from script import Script
-from game import ToramGame
+from game import RunescapeGame
 
 # extern
 import keyboard
@@ -23,7 +23,7 @@ os.system('mode con: cols=100 lines=41')
 sys.path.append("scripts")
 
 main = None
-game_class = ToramGame
+game_class = RunescapeGame
 
 class Main:
   def __init__(self):
@@ -91,6 +91,7 @@ class Main:
       return
 
     for name in configs:
+      print(name)
       config = configs[name]
       module = importlib.import_module(name)
       # load script classes
@@ -118,7 +119,7 @@ class Main:
 if __name__ == "__main__":
   print("")
   print(" Welcome to")
-  print(" _____                   _____     _   \n|_   _|___ ___ ___ _____| __  |___| |_ \n  | | | . |  _| .\'|     | __ -| . |  _|\n  |_| |___|_| |__,|_|_|_|_____|___|_|  \n                                       ")
+  print(" \n _______  __   __  _______  _______  _______ \n|       ||  | |  ||  _    ||       ||       |\n|    _  ||  |_|  || |_|   ||   _   ||_     _|\n|   |_| ||       ||       ||  | |  |  |   |  \n|    ___||_     _||  _   | |  |_|  |  |   |  \n|   |      |   |  | |_|   ||       |  |   |  \n|___|      |___|  |_______||_______|  |___|  \n  \n                                       ")
 
   main = Main()
   main.load()

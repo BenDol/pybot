@@ -18,9 +18,13 @@ class Component(object):
   def __init__(self, config):
     self.config = config
     self.enabled = config["enabled"]
+    self.game = None
 
-  def load(self):
-    pass
+  def load(self, owner):
+    if hasattr(owner, "game"):
+      self.game = owner.game
+    else:
+      print(" ERROR: No game object found in Component origin!")
 
   def unload(self):
     pass
@@ -36,8 +40,8 @@ class TaskComponent(Component):
     super().__init__(config)
     self.parallel = config.get("parallel") or False
 
-  def load(self):
-    super().load()
+  def load(self, owner):
+    super().load(owner)
 
   def unload(self):
     super().unload()
@@ -74,14 +78,14 @@ def add(owner, component_name, indent=1, *args):
     return None
 
   comp = clazz(*args)
-  comp.load()
+  comp.load(owner)
   components.append(comp)
 
   if owner.components is None:
     throw_no_components()
 
   owner.components.append(comp)
-  print(f"{string.indent(indent)}Added component '{component_name}' to {owner}")
+  print(f"{string.indent(indent)}Added component '{component_name}'")
   return comp
 
 def get(owner, component_name):

@@ -63,6 +63,4 @@ class Script(object):
     return value and value or or_default
 
   def send_keystrokes(self, key, delay=None):
-    if delay:
-      time.sleep(random.uniform(delay[0], delay[1]))
-    self.game.window.send_keystrokes(key)
+    self.game.send_keystrokes(key, delay)
