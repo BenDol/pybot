@@ -28,7 +28,7 @@
             "config": {
               "enabled": true,
               "pos": [300, 300],
-              "delay": [0.15, 0.22],
+              "delay": null,
               "post_delay": [0, 0]
             }
           }]

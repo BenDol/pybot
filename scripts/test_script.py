@@ -18,4 +18,4 @@ class Test(Script):
 
   @task(delay=[1,3])
   def move(self, *args):
-    return False
+    return True
