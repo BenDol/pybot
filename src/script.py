@@ -19,8 +19,9 @@ class Script(object):
     self.verbose = False
     self.components = []
 
-  def load(self):
+  def load(self, config):
     print(f" Loading {self.name}")
+    self.config = self.config | config
     self.enabled = self.config.get("enabled")
     self.verbose = self.config.get("verbose")
 
@@ -61,6 +62,12 @@ class Script(object):
       config = self.config
     value = config.get(key)
     return value and value or or_default
+
+  def run_task(self, name):
+    for task in self.tasks:
+      if task.name.endswith(name):
+        print("found")
+        task.run()
 
   def send_keystrokes(self, key, delay=None):
     self.game.send_keystrokes(key, delay)

@@ -5,6 +5,12 @@ import random
 import time
 import math
 
+from pywinauto.timings import Timings
+
+Timings.fast()
+Timings._timings['after_clickinput_wait'] = 0
+Timings._timings['after_setcursorpos_wait'] = 0
+
 class Mouse(object):
   def __init__(self, engine, config):
     self.engine = engine
@@ -21,7 +27,7 @@ class Mouse(object):
     if delay:
       time.sleep(random.uniform(delay[0], delay[1]))
 
-  def navigate(self, xy, speed=[100, 200], delay=None, callback=None):
+  def navigate(self, xy, speed=[25, 55], delay=None, callback=None):
     tx, ty = xy
     x, y = self.get_xy()
 

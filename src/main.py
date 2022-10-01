@@ -8,6 +8,7 @@ import importlib
 # core
 import tasks
 import components
+import config
 from settings import settings as settings
 from script import Script
 from game import RunescapeGame
@@ -91,16 +92,15 @@ class Main:
       return
 
     for name in configs:
-      print(name)
-      config = configs[name]
+      conf = configs[name]
       module = importlib.import_module(name)
       # load script classes
-      for name, obj in inspect.getmembers(module):
+      for n, obj in inspect.getmembers(module):
         if obj is Script or not inspect.isclass(obj) or not issubclass(obj, Script):
           continue
 
-        script = obj(self, config)
-        script.load()
+        script = obj(self, config.load("scripts/" + name))
+        script.load(conf)
         self.scripts.append(script)
     print(f" Loaded {len(self.scripts)} script classes")
     print()
@@ -119,7 +119,7 @@ class Main:
 if __name__ == "__main__":
   print("")
   print(" Welcome to")
-  print(" \n _______  __   __  _______  _______  _______ \n|       ||  | |  ||  _    ||       ||       |\n|    _  ||  |_|  || |_|   ||   _   ||_     _|\n|   |_| ||       ||       ||  | |  |  |   |  \n|    ___||_     _||  _   | |  |_|  |  |   |  \n|   |      |   |  | |_|   ||       |  |   |  \n|___|      |___|  |_______||_______|  |___|  \n  \n                                       ")
+  print("  _______  __   __  _______  _______  _______ \n |       ||  | |  ||  _    ||       ||       |\n |    _  ||  |_|  || |_|   ||   _   ||_     _|\n |   |_| ||       ||       ||  | |  |  |   |  \n |    ___||_     _||  _   | |  |_|  |  |   |  \n |   |      |   |  | |_|   ||       |  |   |  \n |___|      |___|  |_______||_______|  |___|  \n  \n                                       ")
 
   main = Main()
   main.load()

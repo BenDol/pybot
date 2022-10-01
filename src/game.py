@@ -95,7 +95,6 @@ class ToramGame(Game):
   @task(delay=0.5, silent=True)
   def scan(self, *args):
     Game.scan(self, *args)
-    
     self.data["mana"] = self.read_mana()
 
   def read_mana(self):

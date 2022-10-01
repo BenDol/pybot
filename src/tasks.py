@@ -27,7 +27,7 @@ class Task(threading.Timer):
     if hasattr(origin, 'game'):
       self.game = origin.game
     else:
-      print(" ERROR: No game object found in origin!")
+      self.game = origin
     super().__init__(self.assign_interval(), fn, args=(self, args))
     self.name = name
     self.components = []
@@ -39,9 +39,15 @@ class Task(threading.Timer):
         if not self.silent:
           print(f" >> {self.name} {self.interval_str}s")
 
-        if self.function(self.origin, *self.args, **self.kwargs):
-          self.components_update()
-          self.components_post_update()
+        handler = self.function(self.origin, *self.args, **self.kwargs) or TaskHandler()
+        try:
+          if handler.can_start():
+            handler.on_started()
+            self.components_update()
+            self.components_post_update()
+            handler.on_completed()
+        except Exception as e:
+          handler.on_failed(e)
 
         self.assign_interval()
     else:
@@ -82,6 +88,25 @@ class Task(threading.Timer):
       else:
         c.post_update(self)
 
+
+class TaskHandler(object):
+  def __init__(self, can_start=lambda: True, started=None, completed=None, failed=None):
+    self.can_start = can_start
+    self.started = started
+    self.completed = completed
+    self.failed = failed
+
+  def on_started(self):
+    if self.started:
+      self.started()
+
+  def on_completed(self):
+    if self.completed:
+      self.completed()
+
+  def on_failed(self, e):
+    if self.failed:
+      self.failed(e)
 
 def task(delay, silent=False):
   def wrapper(fn):

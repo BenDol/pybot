@@ -1,6 +1,3 @@
-import os
-import json
+import config
 
-f = open(os.getcwd() + '/settings.json', )
-settings = json.load(f)
-f.close()
+settings = config.load("settings.json")
