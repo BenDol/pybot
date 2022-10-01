@@ -22,7 +22,7 @@ class Mouse(object):
 
   def move(self, xy, delay=None):
     if self.locked:
-      return False
+      raise RuntimeError("Mouse locked")
 
     self.lock()
     if delay:
@@ -31,7 +31,7 @@ class Mouse(object):
 
   def click(self, button, delay=None):
     if self.locked:
-      return False
+      raise RuntimeError("Mouse locked")
 
     self.lock()
     if delay:
@@ -40,7 +40,7 @@ class Mouse(object):
 
   def navigate(self, xy, speed=[25, 55], delay=None, callback=None):
     if self.locked:
-      return False
+      raise RuntimeError("Mouse locked")
 
     tx, ty = xy
     x, y = self.get_xy()

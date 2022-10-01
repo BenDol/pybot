@@ -47,7 +47,8 @@ class Task(threading.Timer):
             self.components_post_update()
             handler.on_completed()
         except Exception as e:
-          print(f" ERROR: task '{self.name}' failed {e}")
+          print(f" ERROR: task '{self.name}' failed")
+          print(e)
           handler.on_failed(e)
 
         self.assign_interval()

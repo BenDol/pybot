@@ -38,8 +38,27 @@ class WineMakerScript(Script):
   def unload(self):
     super().unload()
 
+  def start(self):
+    super().start()
+
+  def sync(self):
+    if not self.game.screen_capture:
+      return False
+
+    pixel = self.game.screen_capture.getpixel((1358, 1123))
+    self.bank_open = color.is_match(pixel, [38, 250, 43], 10)
+
+    if self.bank_open:
+      self.bag_open = self.bank_open
+    else:
+      pixel = self.game.screen_capture.getpixel((2324, 904))
+      self.bag_open = color.is_match(pixel, [111, 37, 28], 10)
+    return True
+
   @task(delay=[0.4,0.9], silent=True)
   def state_update(self, *args):
+    self.sync()
+
     match self.state:
       case State.OpenBag:
         if self.bag_open:
@@ -72,9 +91,14 @@ class WineMakerScript(Script):
 
   @task(delay=[1,3], silent=True)
   def open_bag(self, *args):
-    if self.state != State.OpenBag:
+    self.sync()
+    if self.bank_open:
+      self.bag_open = True
       return False
 
+    def can_start():
+      self.sync()
+      return not self.bank_open and not self.bag_open
     def started():
       print("started open_bag")
     def completed():
@@ -82,8 +106,8 @@ class WineMakerScript(Script):
       pixel = self.game.screen_capture.getpixel((2324, 904))
       self.bag_open = color.is_match(pixel, [111, 37, 28], 10)
     def failed(err):
-      print("failed " + err)
-    return TaskHandler(started=started, completed=completed, failed=failed)
+      print("failed")
+    return TaskHandler(can_start=can_start, started=started, completed=completed, failed=failed)
 
   @task(delay=[1,3], silent=True)
   def open_bank(self, *args):
@@ -93,16 +117,16 @@ class WineMakerScript(Script):
     def can_start():
       print("can_start open_bank")
       pixel = self.game.screen_capture.getpixel((1358, 1123))
-      self.bank_open = color.is_match(pixel, [38, 250, 43], 5)
+      self.bank_open = color.is_match(pixel, [38, 250, 43], 10)
       return not self.bank_open
     def started():
       print("started open_bank")
     def completed():
       print("completed open_bank")
       pixel = self.game.screen_capture.getpixel((1358, 1123))
-      self.bank_open = color.is_match(pixel, [38, 250, 43], 5)
+      self.bank_open = color.is_match(pixel, [38, 250, 43], 10)
     def failed(err):
-      print("failed " + err)
+      print("failed")
     return TaskHandler(can_start=can_start, started=started, completed=completed, failed=failed)
 
   @task(delay=[1,3], silent=True)
@@ -116,7 +140,7 @@ class WineMakerScript(Script):
       print("completed deposit_items")
       self.deposited = True
     def failed(err):
-      print("failed " + err)
+      print("failed")
     return TaskHandler(started=started, completed=completed, failed=failed)
 
   @task(delay=[1,3], silent=True)
@@ -130,7 +154,7 @@ class WineMakerScript(Script):
       print("completed withdraw_items")
       self.withdrawn = True
     def failed(err):
-      print("failed " + err)
+      print("failed")
     return TaskHandler(started=started, completed=completed, failed=failed)
 
   @task(delay=[1,3], silent=True)
@@ -141,7 +165,7 @@ class WineMakerScript(Script):
     def can_start():
       print("can_start close_bank")
       pixel = self.game.screen_capture.getpixel((1358, 1123))
-      self.bank_open = color.is_match(pixel, [38, 250, 43], 5)
+      self.bank_open = color.is_match(pixel, [38, 250, 43], 10)
       print(self.bank_open)
       return self.bank_open
     def started():
@@ -149,9 +173,9 @@ class WineMakerScript(Script):
     def completed():
       print("completed close_bank")
       pixel = self.game.screen_capture.getpixel((1358, 1123))
-      self.bank_open = color.is_match(pixel, [38, 250, 43], 5)
+      self.bank_open = color.is_match(pixel, [38, 250, 43], 10)
     def failed(err):
-      print("failed " + err)
+      print("failed")
     return TaskHandler(started=started, completed=completed, failed=failed)
 
   @task(delay=[1,3], silent=True)
@@ -159,13 +183,15 @@ class WineMakerScript(Script):
     if self.state != State.UseItems:
       return False
 
+    print(self.state)
+
     def started():
       print("started use_items")
     def completed():
       print("completed use_items")
       self.used_items = True
     def failed(err):
-      print("failed " + err)
+      print("failed")
 
     return TaskHandler(started=started, completed=completed, failed=failed)
 
@@ -181,5 +207,5 @@ class WineMakerScript(Script):
       pixel = self.game.screen_capture.getpixel((2310, 1139))
       self.items_mixed = color.is_match(pixel, [159, 51, 44], 5)
     def failed(err):
-      print("failed " + err)
+      print("failed")
     return TaskHandler(started=started, completed=completed, failed=failed)
