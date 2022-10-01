@@ -5,6 +5,7 @@ from pywinauto.application import Application
 # core
 import tasks
 from tasks import task
+from tasks import TaskHandler
 from mouse import PyWinMouse
 
 # util
@@ -74,7 +75,7 @@ class RunescapeGame(Game):
   @task(delay=0.5, silent=True)
   def scan(self, *args):
     Game.scan(self, *args)
-
+    return TaskHandler()
 
 class ToramGame(Game):
   def __init__(self, config):
@@ -96,6 +97,7 @@ class ToramGame(Game):
   def scan(self, *args):
     Game.scan(self, *args)
     self.data["mana"] = self.read_mana()
+    return TaskHandler()
 
   def read_mana(self):
     if not self.is_health_showing():

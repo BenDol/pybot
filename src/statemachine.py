@@ -1,0 +1,2 @@
+class StateMachine(object):
+  

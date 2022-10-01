@@ -39,14 +39,15 @@ class Task(threading.Timer):
         if not self.silent:
           print(f" >> {self.name} {self.interval_str}s")
 
-        handler = self.function(self.origin, *self.args, **self.kwargs) or TaskHandler()
+        handler = self.function(self.origin, *self.args, **self.kwargs)
         try:
-          if handler.can_start():
+          if handler and handler.can_start():
             handler.on_started()
             self.components_update()
             self.components_post_update()
             handler.on_completed()
         except Exception as e:
+          print(f" ERROR: task '{self.name}' failed {e}")
           handler.on_failed(e)
 
         self.assign_interval()

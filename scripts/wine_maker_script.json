@@ -2,13 +2,20 @@
   "enabled": true,
   "verbose": false,
   "tasks": {
+    "state_update": {
+      "enabled": true,
+      "delay": [0.4, 0.9]
+    },
     "open_bag": {
       "enabled": true,
       "delay": [1, 3],
       "components": [{
-        "name": "MouseClickTaskComponent",
+        "name": "PixelClickTaskComponent",
         "config": {
           "enabled": true,
+          "pixel_pos": [2324, 904],
+          "pixel_color": [111, 37, 28],
+          "pixel_tolerance": 10,
           "button": "left",
           "position": [2323, 902, 2362, 945],
           "speed": [25, 55],
@@ -17,7 +24,122 @@
         }
       }]
     },
-    "test": {
+    "open_bank": {
+      "enabled": true,
+      "delay": [1, 3],
+      "components": [{
+        "name": "PixelClickTaskComponent",
+        "config": {
+          "enabled": true,
+          "pixel_pos": [1358, 1123],
+          "pixel_color": [49, 200, 52],
+          "pixel_tolerance": 10,
+          "pixel_mismatch": true,
+          "button": "left",
+          "position": [1169, 989, 1382, 1234],
+          "speed": [25, 55],
+          "delay": [0.000001, 0.00002],
+          "post_delay": [0, 0]
+        }
+      }]
+    },
+    "deposit_items": {
+      "enabled": true,
+      "delay": [1, 3],
+      "components": [{
+        "name": "MouseClickTaskComponent",
+        "config": {
+          "enabled": true,
+          "button": "left",
+          "position": [1356, 1095, 1394, 1133],
+          "speed": [25, 55],
+          "delay": [0.000001, 0.00002],
+          "post_delay": [0.3, 0.5]
+        }
+      }]
+    },
+    "withdraw_items": {
+      "enabled": true,
+      "delay": [1, 3],
+      "components": [{
+        "name": "MouseClickTaskComponent",
+        "config": {
+          "enabled": true,
+          "button": "left",
+          "position": [802, 155, 826, 177],
+          "speed": [25, 55],
+          "delay": [0.000001, 0.00002],
+          "post_delay": [0.3, 0.5]
+        }
+      },{
+        "name": "MouseClickTaskComponent",
+        "config": {
+          "enabled": true,
+          "button": "left",
+          "position": [876, 150, 900, 171],
+          "speed": [25, 55],
+          "delay": [0.000001, 0.00002],
+          "post_delay": [0.3, 0.5]
+        }
+      }]
+    },
+    "close_bank": {
+      "enabled": true,
+      "delay": [1, 3],
+      "components": [{
+        "name": "PixelClickTaskComponent",
+        "config": {
+          "enabled": true,
+          "pixel_pos": [1358, 1123],
+          "pixel_color": [49, 200, 52],
+          "pixel_tolerance": 5,
+          "button": "left",
+          "position": [1403, 40, 1424, 62],
+          "speed": [25, 55],
+          "delay": [0.000001, 0.00002],
+          "post_delay": [0.4, 0.6]
+        }
+      }]
+    },
+    "use_items": {
+      "enabled": true,
+      "delay": [1, 3],
+      "components": [{
+        "name": "MouseClickTaskComponent",
+        "config": {
+          "enabled": true,
+          "button": "left",
+          "position": [2300, 1140, 2320, 1164],
+          "speed": [25, 55],
+          "delay": [0.000001, 0.00002],
+          "post_delay": [0.3, 0.5]
+        }
+      },{
+        "name": "MouseClickTaskComponent",
+        "config": {
+          "enabled": true,
+          "button": "left",
+          "position": [2363, 1139, 2383, 1164],
+          "speed": [25, 55],
+          "delay": [0.000001, 0.00002],
+          "post_delay": [0.3, 0.5]
+        }
+      },{
+        "name": "PixelClickTaskComponent",
+        "config": {
+          "enabled": true,
+          "pixel_pos": [389, 1269],
+          "pixel_color": [140, 45, 39],
+          "pixel_tolerance": 10,
+          "button": "left",
+          "position": [333, 1251, 444, 1322],
+          "speed": [25, 55],
+          "delay": [0.000001, 0.00002],
+          "post_delay": [0.3, 0.5]
+        }
+      }]
+    },
+    "wait_for_items": {
       "enabled": true,
       "delay": [1, 3]
     }

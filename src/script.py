@@ -64,6 +64,8 @@ class Script(object):
     return value and value or or_default
 
   def run_task(self, name):
+    if callable(name):
+      name = name.__name__
     for task in self.tasks:
       if task.name.endswith(name):
         print("found")

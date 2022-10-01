@@ -15,19 +15,33 @@ class Mouse(object):
   def __init__(self, engine, config):
     self.engine = engine
     self.config = config
+    self.locked = False
 
   def get_xy(self):
     pass
 
   def move(self, xy, delay=None):
+    if self.locked:
+      return False
+
+    self.lock()
     if delay:
       time.sleep(random.uniform(delay[0], delay[1]))
+    return True
 
   def click(self, button, delay=None):
+    if self.locked:
+      return False
+
+    self.lock()
     if delay:
       time.sleep(random.uniform(delay[0], delay[1]))
+    return True
 
   def navigate(self, xy, speed=[25, 55], delay=None, callback=None):
+    if self.locked:
+      return False
+
     tx, ty = xy
     x, y = self.get_xy()
 
@@ -50,10 +64,18 @@ class Mouse(object):
       self.move(xy=(x, y), delay=delay)
 
     if callback:
-      callback(self, xy)
+      return callback(self, xy)
+
+    return True
 
   def range(self, range):
     return random.randint(range[0], range[1])
+
+  def lock(self):
+    self.locked = True
+
+  def unlock(self):
+    self.locked = False
 
 
 class PyWinMouse(Mouse):
@@ -64,9 +86,13 @@ class PyWinMouse(Mouse):
     return win32api.GetCursorPos()
 
   def move(self, xy, delay=None):
-    super().move(xy, delay)
-    self.engine.move(coords=xy)
+    if super().move(xy, delay):
+      self.engine.move(coords=xy)
+      self.unlock()
+      return True
 
   def click(self, button='left', delay=None):
-    super().click(button, delay)
-    self.engine.click(button=button, coords=self.get_xy())
+    if super().click(button, delay):
+      self.engine.click(button=button, coords=self.get_xy())
+      self.unlock()
+      return True
