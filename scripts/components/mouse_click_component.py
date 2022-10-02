@@ -2,9 +2,6 @@
 import random
 import time
 
-# core
-from components import TaskComponent
-
 # components
 from mouse_move_component import MouseMoveTaskComponent
 

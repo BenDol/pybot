@@ -4,3 +4,5 @@ build
 dist
 *.spec
 *.sublime-workspace
+/pybot.egg-info/
+/pybot.egg-info/

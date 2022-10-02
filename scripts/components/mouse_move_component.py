@@ -3,10 +3,10 @@ import random
 import time
 
 # core
-from components import TaskComponent
+from pybot.core.component import TaskComponent
 
 #util
-import util.vector as vector
+import pybot.util.vector as vector
 
 class MouseMoveTaskComponent(TaskComponent):
   def __init__(self, config):

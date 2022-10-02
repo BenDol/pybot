@@ -6,34 +6,42 @@ import inspect
 import importlib
 
 # core
-import tasks
-import components
-import config
-from settings import settings as settings
-from script import Script
-from game import RunescapeGame
+import pybot.core.tasks as tasks
+import pybot.core.config as config
+from pybot.core.component import Component
+from pybot.core.component import TaskComponent
+from pybot.core.settings import settings as settings
+from pybot.core.script import Script
+from pybot.core.game import RunescapeGame
 
 # extern
 import keyboard
 
 # utils
-import util.string as string
+import pybot.util.string as string
+import pybot.util.vector as vector
 
-os.system('mode con: cols=100 lines=41')
+#os.system('mode con: cols=100 lines=41')
 
 sys.path.append("scripts")
+sys.path.append("scripts/components")
 
-main = None
+app = None
 game_class = RunescapeGame
 
-class Main:
+vector.random_point([0,0], [1,3])
+
+class App:
   def __init__(self):
     self.enabled = True
     self.settings = settings
     self.game = game_class(settings["game"])
     self.scripts = []
+    self.components = []
+    self.component_classes = {}
+    self.component_modules = []
     self.keybinds = {}
-    tasks.main = self
+    tasks.app = self
 
   def is_active(self):
     return self.game.is_active()
@@ -61,8 +69,8 @@ class Main:
 
   def load(self):
     self.keybinds = settings["keybinds"]
-    keyboard.on_release_key(self.keybinds["pause"], main.toggle)
-    keyboard.on_release_key(self.keybinds["quit"],  main.quit)
+    keyboard.on_release_key(self.keybinds["pause"], app.toggle)
+    keyboard.on_release_key(self.keybinds["quit"],  app.quit)
 
     # enable listening to keyboard and mouse events
     for action in self.keybinds:
@@ -74,7 +82,7 @@ class Main:
     self.game.load()
 
     # load components
-    components.load()
+    self.load_components()
 
     # Load scripts
     self.load_scripts()
@@ -115,12 +123,61 @@ class Main:
     print(f" Started {count} scripts")
     print()
 
+  def load_components(self, path="scripts/components"):
+    for file_name in os.listdir(path):
+      name = file_name.replace(".py", "")
+      module = importlib.import_module(name)
+      if module:
+        self.component_modules.append(module)
 
-if __name__ == "__main__":
+      # load script classes
+      for n, obj in inspect.getmembers(module):
+        if not inspect.isclass(obj):
+          continue
+        if obj is Component or not issubclass(obj, Component):
+          continue
+        if obj is TaskComponent or not issubclass(obj, TaskComponent):
+          continue
+        self.component_classes[n] = obj
+
+  def add_component(self, owner, component_name, indent=1, *args):
+    clazz = self.component_classes[component_name]
+    if not clazz:
+      print(f"{string.indent(indent)}Component '{component_name}' not found")
+      return None
+
+    comp = clazz(*args)
+    comp.load(owner)
+    self.components.append(comp)
+
+    if owner.components is None:
+      throw_no_components()
+
+    owner.components.append(comp)
+    print(f"{string.indent(indent)}Added component '{component_name}'")
+    return comp
+
+  def get_component(self, owner, component_name):
+    if owner.components is None:
+      throw_no_components()
+
+    for comp in owner.components:
+      if type(comp).__name__ is component_name:
+        return comp
+    return None
+
+def throw_no_components(owner):
+  raise RuntimeError(f" Owner '{owner}' does not have a 'components' list member")
+
+def main():
   print("")
   print(" Welcome to")
   print("  _______  __   __  _______  _______  _______ \n |       ||  | |  ||  _    ||       ||       |\n |    _  ||  |_|  || |_|   ||   _   ||_     _|\n |   |_| ||       ||       ||  | |  |  |   |  \n |    ___||_     _||  _   | |  |_|  |  |   |  \n |   |      |   |  | |_|   ||       |  |   |  \n |___|      |___|  |_______||_______|  |___|  \n  \n                                       ")
 
-  main = Main()
-  main.load()
-  main.start()
+  global app
+  app = App()
+  app.load()
+  app.start()
+
+if __name__ == "__main__":
+  main()

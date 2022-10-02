@@ -1,4 +1,4 @@
-import util.number as number
+import pybot.util.number as number
 
 # is rgb_a a match of rgb_b with a tolerance (tol) setting
 def is_match(rgb_a, rgb_b, tol):

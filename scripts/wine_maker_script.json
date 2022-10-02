@@ -4,11 +4,11 @@
   "tasks": {
     "state_update": {
       "enabled": true,
-      "delay": [0.4, 0.9]
+      "delay": [0.2, 0.6]
     },
     "open_bag": {
       "enabled": true,
-      "delay": [1, 3],
+      "delay": [0.5, 1.5],
       "components": [{
         "name": "PixelClickTaskComponent",
         "config": {
@@ -18,7 +18,7 @@
           "pixel_tolerance": 10,
           "button": "left",
           "position": [2323, 902, 2362, 945],
-          "speed": [25, 55],
+          "speed": [35, 65],
           "delay": [0.000001, 0.00002],
           "post_delay": [0, 0]
         }
@@ -26,7 +26,7 @@
     },
     "open_bank": {
       "enabled": true,
-      "delay": [1, 3],
+      "delay": [0.5, 1.5],
       "components": [{
         "name": "PixelClickTaskComponent",
         "config": {
@@ -37,7 +37,7 @@
           "pixel_mismatch": true,
           "button": "left",
           "position": [1169, 989, 1382, 1234],
-          "speed": [25, 55],
+          "speed": [35, 65],
           "delay": [0.000001, 0.00002],
           "post_delay": [0, 0]
         }
@@ -45,14 +45,14 @@
     },
     "deposit_items": {
       "enabled": true,
-      "delay": [1, 3],
+      "delay": [0.5, 1.5],
       "components": [{
         "name": "MouseClickTaskComponent",
         "config": {
           "enabled": true,
           "button": "left",
           "position": [1356, 1095, 1394, 1133],
-          "speed": [25, 55],
+          "speed": [35, 65],
           "delay": [0.000001, 0.00002],
           "post_delay": [0.3, 0.5]
         }
@@ -60,14 +60,14 @@
     },
     "withdraw_items": {
       "enabled": true,
-      "delay": [1, 3],
+      "delay": [0.5, 1.5],
       "components": [{
         "name": "MouseClickTaskComponent",
         "config": {
           "enabled": true,
           "button": "left",
-          "position": [802, 155, 826, 177],
-          "speed": [25, 55],
+          "position": [1235, 1019, 1261, 1041],
+          "speed": [35, 65],
           "delay": [0.000001, 0.00002],
           "post_delay": [0.3, 0.5]
         }
@@ -76,41 +76,38 @@
         "config": {
           "enabled": true,
           "button": "left",
-          "position": [876, 150, 900, 171],
-          "speed": [25, 55],
+          "position": [1305, 1015, 1332, 1040],
+          "speed": [35, 65],
           "delay": [0.000001, 0.00002],
-          "post_delay": [0.3, 0.5]
+          "post_delay": [0.1, 0.3]
         }
       }]
     },
     "close_bank": {
       "enabled": true,
-      "delay": [1, 3],
+      "delay": [0.5, 1.5],
       "components": [{
-        "name": "PixelClickTaskComponent",
+        "name": "MouseClickTaskComponent",
         "config": {
           "enabled": true,
-          "pixel_pos": [1358, 1123],
-          "pixel_color": [49, 200, 52],
-          "pixel_tolerance": 5,
           "button": "left",
           "position": [1403, 40, 1424, 62],
-          "speed": [25, 55],
+          "speed": [35, 65],
           "delay": [0.000001, 0.00002],
-          "post_delay": [0.4, 0.6]
+          "post_delay": [0.2, 0.3]
         }
       }]
     },
     "use_items": {
       "enabled": true,
-      "delay": [1, 3],
+      "delay": [0.5, 1.5],
       "components": [{
         "name": "MouseClickTaskComponent",
         "config": {
           "enabled": true,
           "button": "left",
           "position": [2300, 1140, 2320, 1164],
-          "speed": [25, 55],
+          "speed": [35, 65],
           "delay": [0.000001, 0.00002],
           "post_delay": [0.3, 0.5]
         }
@@ -120,7 +117,7 @@
           "enabled": true,
           "button": "left",
           "position": [2363, 1139, 2383, 1164],
-          "speed": [25, 55],
+          "speed": [35, 65],
           "delay": [0.000001, 0.00002],
           "post_delay": [0.3, 0.5]
         }
@@ -133,15 +130,27 @@
           "pixel_tolerance": 10,
           "button": "left",
           "position": [333, 1251, 444, 1322],
-          "speed": [25, 55],
+          "speed": [35, 65],
           "delay": [0.000001, 0.00002],
-          "post_delay": [0.3, 0.5]
+          "post_delay": [0.2, 0.4]
         }
       }]
     },
     "wait_for_items": {
       "enabled": true,
-      "delay": [1, 3]
+      "delay": [0.5, 1.5]
+    },
+    "break_check": {
+      "enabled": false,
+      "delay": [40, 120],
+      "components": [{
+        "name": "BreakTaskComponent",
+        "config": {
+          "enabled": true,
+          "chance": 0.25,
+          "delay": [20, 200]
+        }
+      }]
     }
   }
 }

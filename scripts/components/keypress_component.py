@@ -3,7 +3,7 @@ import random
 import time
 
 # core
-from components import TaskComponent
+from pybot.core.component import TaskComponent
 
 class KeyPressTaskComponent(TaskComponent):
   def __init__(self, config):

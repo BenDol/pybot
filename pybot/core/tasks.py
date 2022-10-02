@@ -6,15 +6,14 @@ import random
 from functools import wraps
 
 # core
-import components
-from settings import settings as settings
+from pybot.core.settings import settings as settings
 
 float_format = "{0:.2f}"
 
 configs = {}
 tasks = {}
 globes = globals()
-main = None
+app = None
 
 class Task(threading.Timer):
   def __init__(self, delay, fn, origin, name, silent=False, *args):
@@ -41,14 +40,14 @@ class Task(threading.Timer):
 
         handler = self.function(self.origin, *self.args, **self.kwargs)
         try:
-          if handler and handler.can_start():
-            handler.on_started()
+          if handler and handler.can_start(self):
+            handler.on_started(self)
             self.components_update()
             self.components_post_update()
-            handler.on_completed()
+            handler.on_completed(self)
         except Exception as e:
           print(f" ERROR: task '{self.name}' failed => {str(e)}")
-          handler.on_failed(e)
+          handler.on_failed(self, e)
 
         self.assign_interval()
     else:
@@ -91,23 +90,23 @@ class Task(threading.Timer):
 
 
 class TaskHandler(object):
-  def __init__(self, can_start=lambda: True, started=None, completed=None, failed=None):
+  def __init__(self, can_start=lambda t: True, started=None, completed=None, failed=None):
     self.can_start = can_start
     self.started = started
     self.completed = completed
     self.failed = failed
 
-  def on_started(self):
+  def on_started(self, task):
     if self.started:
-      self.started()
+      self.started(task)
 
-  def on_completed(self):
+  def on_completed(self, task):
     if self.completed:
-      self.completed()
+      self.completed(task)
 
-  def on_failed(self, e):
+  def on_failed(self, task, e):
     if self.failed:
-      self.failed(e)
+      self.failed(task, e)
 
 def task(delay, silent=False):
   def wrapper(fn):
@@ -149,7 +148,7 @@ def process(tasks, parent=None):
     if parent:
       task = func()
     else:
-      task = func(main)
+      task = func(app)
 
     if not task:
       continue
@@ -163,7 +162,7 @@ def process(tasks, parent=None):
     comp_list = task_config.get("components")
     if (comp_list):
       for c in comp_list:
-        components.add(task, c["name"], 3, c["config"] or {})
+        app.add_component(task, c["name"], 3, c["config"] or {})
 
     instances.append(task)
   return instances

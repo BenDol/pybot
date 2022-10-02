@@ -4,8 +4,7 @@ import random
 import json
 
 # core
-import tasks
-import components
+import pybot.core.tasks as tasks
 
 class Script(object):
   def __init__(self, parent, config, namespace=None):
@@ -29,7 +28,7 @@ class Script(object):
     comp_list = self.config.get("components")
     if (comp_list):
       for c in comp_list:
-        components.add(self, c["name"], 3, c["config"] or {})
+        parent.add_component(self, c["name"], 3, c["config"] or {})
 
     # load tasks
     t = self.config.get("tasks")

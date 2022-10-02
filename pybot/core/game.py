@@ -3,14 +3,14 @@ import pywinauto
 from pywinauto.application import Application
 
 # core
-import tasks
-from tasks import task
-from tasks import TaskHandler
-from mouse import PyWinMouse
+import pybot.core.tasks as tasks
+from pybot.core.tasks import task
+from pybot.core.tasks import TaskHandler
+from pybot.core.mouse import PyWinMouse
 
 # util
-import util.win32 as win32
-import util.color as color
+import pybot.util.win32 as win32
+import pybot.util.color as color
 
 class Game(object):
   def __init__(self, config):

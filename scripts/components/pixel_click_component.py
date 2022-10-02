@@ -2,12 +2,8 @@
 import random
 import time
 
-# core
-from components import TaskComponent
-
 #util
-import util.vector as vector
-import util.color as color
+import pybot.util.color as color
 
 # components
 from mouse_click_component import MouseClickTaskComponent
