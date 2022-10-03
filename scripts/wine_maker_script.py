@@ -42,7 +42,7 @@ class WineMakerScript(Script):
     super().start()
 
   def sync(self):
-    if not self.game.screen_capture:
+    if not self.program.screen_capture:
       return False
 
     self.bank_open = self.is_bank_open()
@@ -197,7 +197,7 @@ class WineMakerScript(Script):
       print("started wait_for_items")
     def completed(task):
       print("completed wait_for_items")
-      pixel = self.game.screen_capture.getpixel((2310, 1139))
+      pixel = self.program.screen_capture.getpixel((2310, 1139))
       self.items_mixed = color.is_match(pixel, [159, 51, 44], 5)
     def failed(task, err):
       print("failed")
@@ -214,11 +214,11 @@ class WineMakerScript(Script):
     return TaskHandler(started=started, completed=completed, failed=failed)
 
   def is_bank_open(self):
-    pixel = self.game.screen_capture.getpixel((1163, 1123))
+    pixel = self.program.screen_capture.getpixel((1163, 1123))
     return color.is_match(pixel, [118, 28, 26], 10)
 
   def is_bag_open(self):
-    pixel = self.game.screen_capture.getpixel((2324, 904))
+    pixel = self.program.screen_capture.getpixel((2324, 904))
     return color.is_match(pixel, [111, 37, 28], 10)
 
   def is_bank_phase(self):

@@ -17,7 +17,7 @@ class PixelClickTaskComponent(MouseClickTaskComponent):
     self.pixel_mismatch = config.get("pixel_mismatch")
 
   def update(self, task):
-    pixel = self.game.screen_capture.getpixel((self.pixel_pos[0], self.pixel_pos[1]))
+    pixel = self.program.screen_capture.getpixel((self.pixel_pos[0], self.pixel_pos[1]))
     print(pixel)
     if not color.is_match(pixel, self.pixel_color, self.pixel_tolerance) or self.pixel_mismatch:
       super().update(task)

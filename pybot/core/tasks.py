@@ -23,10 +23,10 @@ class Task(threading.Timer):
     self.origin = origin
     self.silent = silent
     self.running = False
-    if hasattr(origin, 'game'):
-      self.game = origin.game
+    if hasattr(origin, 'program'):
+      self.program = origin.program
     else:
-      self.game = origin
+      self.program = origin
     super().__init__(self.assign_interval(), fn, args=(self, args))
     self.name = name
     self.components = []

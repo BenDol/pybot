@@ -2,13 +2,13 @@ class Component(object):
   def __init__(self, config):
     self.config = config
     self.enabled = config["enabled"]
-    self.game = None
+    self.program = None
 
   def load(self, owner):
-    if hasattr(owner, "game"):
-      self.game = owner.game
+    if hasattr(owner, "program"):
+      self.program = owner.program
     else:
-      print(" ERROR: No game object found in Component origin!")
+      print(" ERROR: No program object found in Component origin!")
 
   def unload(self):
     pass

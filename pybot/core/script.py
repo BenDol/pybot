@@ -11,7 +11,7 @@ class Script(object):
     self.name = type(self).__name__
     self.namespace = namespace
     self.parent = parent
-    self.game = parent.game
+    self.program = parent.program
     self.config = config
     self.enabled = False
     self.tasks = {}
@@ -71,4 +71,4 @@ class Script(object):
         task.run()
 
   def send_keystrokes(self, key, delay=None):
-    self.game.send_keystrokes(key, delay)
+    self.program.send_keystrokes(key, delay)

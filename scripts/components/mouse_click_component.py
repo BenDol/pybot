@@ -13,7 +13,7 @@ class MouseClickTaskComponent(MouseMoveTaskComponent):
   def update(self, task):
     super().update(task)
 
-    self.game.mouse.click(button=self.button, delay=self.delay)
+    self.program.mouse.click(button=self.button, delay=self.delay)
 
     time.sleep(random.uniform(self.post_delay[0], self.post_delay[1]))
 

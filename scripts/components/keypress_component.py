@@ -20,11 +20,11 @@ class KeyPressTaskComponent(TaskComponent):
     for x in range(self.presses):
       raw_key = self.get_key()
       key = "{" + raw_key + (self.hold and " down" or "") + "}"
-      self.game.send_keystrokes(key)
+      self.program.send_keystrokes(key)
       if x != self.presses:
         time.sleep(random.uniform(self.delay[0], self.delay[1]))
       if self.hold:
-        self.game.send_keystrokes("{"+raw_key+"}")
+        self.program.send_keystrokes("{"+raw_key+"}")
     else:
       time.sleep(random.uniform(self.post_delay[0], self.post_delay[1]))
 

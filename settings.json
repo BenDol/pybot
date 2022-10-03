@@ -1,5 +1,6 @@
 {
-  "game": {
+  "program": {
+    "class": "Runescape",
     "title": "RuneLite - Bonfry",
     "tasks": {
       "scan": {

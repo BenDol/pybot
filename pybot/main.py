@@ -8,11 +8,11 @@ import importlib
 # core
 import pybot.core.tasks as tasks
 import pybot.core.config as config
+from pybot.core.program import Program
 from pybot.core.component import Component
 from pybot.core.component import TaskComponent
 from pybot.core.settings import settings as settings
 from pybot.core.script import Script
-from pybot.core.game import RunescapeGame
 
 # extern
 import keyboard
@@ -25,9 +25,9 @@ import pybot.util.vector as vector
 
 sys.path.append("scripts")
 sys.path.append("scripts/components")
+sys.path.append("scripts/programs")
 
 app = None
-game_class = RunescapeGame
 
 vector.random_point([0,0], [1,3])
 
@@ -35,16 +35,18 @@ class App:
   def __init__(self):
     self.enabled = True
     self.settings = settings
-    self.game = game_class(settings["game"])
+    self.program = None
     self.scripts = []
     self.components = []
     self.component_classes = {}
     self.component_modules = []
+    self.program_modules = []
+    self.program_classes = {}
     self.keybinds = {}
     tasks.app = self
 
   def is_active(self):
-    return self.game.is_active()
+    return self.program.is_active()
 
   def enable(self, enabled):
     if enabled:
@@ -53,7 +55,7 @@ class App:
       print(" Disabled" + string.repeat(' ', 20))
 
     self.enabled = enabled
-    self.game.enabled = enabled
+    self.program.enabled = enabled
 
     for script in self.scripts:
       script.enabled = enabled
@@ -78,8 +80,11 @@ class App:
       print(f" press {key} to {action}")
     print()
 
-    # Load game
-    self.game.load()
+    self.load_programs()
+
+    # Load program
+    self.program = self.create_program()
+    self.program.load()
 
     # load components
     self.load_components()
@@ -88,11 +93,32 @@ class App:
     self.load_scripts()
 
   def start(self):
-    # Start game
-    self.game.start()
+    # Start program
+    self.program.start()
 
     # Start scripts
     self.start_scripts()
+
+  def load_programs(self, path="scripts/programs"):
+    for file_name in os.listdir(path):
+      name = file_name.replace(".py", "")
+      module = importlib.import_module(name)
+      if module:
+        self.program_modules.append(module)
+
+      # load script classes
+      for n, obj in inspect.getmembers(module):
+        if not inspect.isclass(obj):
+          continue
+        if obj is Program or not issubclass(obj, Program):
+          continue
+        print(n)
+        self.program_classes[n] = obj
+
+  def create_program(self):
+    class_name = settings['program']['class']
+    program = self.program_classes[class_name]
+    return program(settings['program'])
 
   def load_scripts(self):
     configs = self.settings.get("scripts")
@@ -110,7 +136,8 @@ class App:
         script = obj(self, config.load("scripts/" + name))
         script.load(conf)
         self.scripts.append(script)
-    print(f" Loaded {len(self.scripts)} script classes")
+    count = len(self.scripts)
+    print(f" Loaded {count} script class{'es'[:count^1]}")
     print()
 
   def start_scripts(self):
@@ -120,7 +147,7 @@ class App:
         script.start()
         count += 1
     print()
-    print(f" Started {count} scripts")
+    print(f" Started {count} script{'s'[:count^1]}")
     print()
 
   def load_components(self, path="scripts/components"):

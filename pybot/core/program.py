@@ -12,7 +12,7 @@ from pybot.core.mouse import PyWinMouse
 import pybot.util.win32 as win32
 import pybot.util.color as color
 
-class Game(object):
+class Program(object):
   def __init__(self, config):
     self.enabled = True
     self.config = config
@@ -42,7 +42,7 @@ class Game(object):
     self.tasks = tasks.process(t, self)
 
   def start(self):
-    print(f"Starting Game")
+    print(f" Starting Program")
     for task in self.tasks:
       task.start()
       print(f"  -> Task '{task.name}'")
@@ -66,65 +66,3 @@ class Game(object):
 
   def mouse_click(self, button='left', delay=None):
     self.mouse.click(button, delay)
-
-
-class RunescapeGame(Game):
-  def __init__(self, config):
-    super().__init__(config)
-
-  @task(delay=0.5, silent=True)
-  def scan(self, *args):
-    Game.scan(self, *args)
-    return TaskHandler()
-
-class ToramGame(Game):
-  def __init__(self, config):
-    super().__init__(config)
-    self.health_chunks = [
-      [686, 731],
-      [742, 787],
-      [797, 841],
-      [853, 897],
-      [909, 953],
-      [964, 1008],
-      [1020, 1064],
-      [1075, 1120],
-      [1131, 1175],
-      [1186, 1231]
-    ]
-
-  @task(delay=0.5, silent=True)
-  def scan(self, *args):
-    Game.scan(self, *args)
-    self.data["mana"] = self.read_mana()
-    return TaskHandler()
-
-  def read_mana(self):
-    if not self.is_health_showing():
-      return
-
-    total = 0
-    amount = 0
-
-    for chunk in self.health_chunks:
-      start = chunk[0]
-      end = chunk[1]
-
-      for x in range(start, end):
-        total += 1
-        for rgb in [[105, 237, 213], [108, 246, 95]]:
-          pixel = self.screen_capture.getpixel((x, 913))
-          if color.is_match(pixel, rgb, 20):
-            amount += 1
-            break
-
-    percent = (amount / total) * 100
-    # print("amount: " + str(amount))
-    # print("total: " + str(total))
-    # print("percent: " + str(percent))
-    return percent
-
-  def is_health_showing(self):
-    rgb = [58, 152, 65]
-    pixel = self.screen_capture.getpixel((685, 875))
-    return color.is_match(pixel, rgb, 0)

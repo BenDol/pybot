@@ -21,10 +21,10 @@ class MouseMoveTaskComponent(TaskComponent):
 
     if self.position:
       if len(self.position) == 2:
-        self.game.mouse.navigate(xy=(self.position[0], self.position[1]), speed=self.speed, delay=self.delay)
+        self.program.mouse.navigate(xy=(self.position[0], self.position[1]), speed=self.speed, delay=self.delay)
       else:
         self.last_pos = vector.random_point((self.position[0], self.position[1]), (self.position[2], self.position[3]))
-        self.game.mouse.navigate(xy=(self.last_pos[0], self.last_pos[1]), speed=self.speed, delay=self.delay)
+        self.program.mouse.navigate(xy=(self.last_pos[0], self.last_pos[1]), speed=self.speed, delay=self.delay)
 
     time.sleep(random.uniform(self.post_delay[0], self.post_delay[1]))
 
