@@ -20,7 +20,6 @@ import keyboard
 
 # utils
 import pybot.util.string as string
-import pybot.util.vector as vector
 
 #os.system('mode con: cols=100 lines=41')
 
@@ -29,8 +28,6 @@ sys.path.append("scripts/components")
 sys.path.append("scripts/programs")
 
 app = None
-
-vector.random_point([0,0], [1,3])
 
 class App:
   def __init__(self):
