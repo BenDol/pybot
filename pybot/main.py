@@ -112,7 +112,6 @@ class App:
           continue
         if obj is Program or not issubclass(obj, Program):
           continue
-        print(n)
         self.program_classes[n] = obj
 
   def create_program(self):
