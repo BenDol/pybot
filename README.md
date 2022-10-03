@@ -89,7 +89,7 @@ Configuring a task in our script configuration looks something like this:
   
 }
 ```
-We can turn off our tasks by setting `"enabled": false` and ypu can see we have even overriden the `"delay"`. This task also has a component that will execute (in given order). There can be as many components are you like.
+We can turn off our tasks by setting `"enabled": false` and you can see we have even overriden the `"delay"`. This task also has a component that will execute (in given order). There can be as many components as you like.
 
 ### Scripts
 A script is a module that orcastrates tasks and components to accomplish a specific goal. The script must come with a `json` file of the same name (i.e. my_script.py must have my_script.json) which contains its default configurations, these configurations can be overriden inside the `settings.json "scripts":{}`. They are comprised of "tasks" which are configured scripts json configuration file. Tasks can then be comprised of components. The standard structure of a Script is like so:
@@ -114,6 +114,7 @@ class MyScript(Script):
 Scripts will often contain `@tasks` (see Tasks section above)
 
 ### Configuration
+TODO
 
 ## License
 MIT License
