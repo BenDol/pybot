@@ -1,13 +1,5 @@
-```
-Welcome to                             
- _______  __   __  _______  _______  _______ 
-|       ||  | |  ||  _    ||       ||       |
-|    _  ||  |_|  || |_|   ||   _   ||_     _|
-|   |_| ||       ||       ||  | |  |  |   |  
-|    ___||_     _||  _   | |  |_|  |  |   |  
-|   |      |   |  | |_|   ||       |  |   |  
-|___|      |___|  |_______||_______|  |___|  
-```
+# PyBot
+![logo-256x256](https://user-images.githubusercontent.com/1935706/193485319-93126efe-12ee-4d34-a50f-6aef929bc514.png)
 
 ## Running the application
 Install python 3.10.1+ from [python.org](https://www.python.org/)
