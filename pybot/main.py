@@ -200,7 +200,7 @@ class App:
     self.components.append(comp)
 
     if owner.components is None:
-      throw_no_components()
+      throw_no_components(owner)
 
     owner.components.append(comp)
     print(f"{string.indent(indent)}Added component '{component_name}'")
@@ -208,7 +208,7 @@ class App:
 
   def get_component(self, owner, component_name):
     if owner.components is None:
-      throw_no_components()
+      throw_no_components(owner)
 
     for comp in owner.components:
       if type(comp).__name__ is component_name:
