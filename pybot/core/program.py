@@ -16,9 +16,9 @@ class Program(object):
   def __init__(self, config):
     self.enabled = True
     self.config = config
-    self.name = config["title"]
+    self.name = config.get("title")
     self.data = {}
-    self.tasks = None
+    self.tasks = []
     self.app = None
     self.window = None
     self.mouse = None
@@ -26,10 +26,8 @@ class Program(object):
     # print(self.window.write_to_xml("test.xml"))
 
   def load(self):
-    print(f" Attaching to '{self.name}' ...")
-    # Attach to application
-    self.app = Application(backend="win32").connect(title=self.name, timeout=10)
-    self.window = self.app.window(title=self.name)
+    self.attach()
+
     if not self.mouse:
       self.mouse = PyWinMouse(pywinauto.mouse)
 
@@ -39,7 +37,8 @@ class Program(object):
 
     # Load tasks
     t = self.config.get("tasks")
-    self.tasks = tasks.process(t, self)
+    if t:
+      self.tasks = tasks.process(t, self)
 
   def start(self):
     print(f" Starting Program")
@@ -47,6 +46,12 @@ class Program(object):
       task.start()
       print(f"  -> Task '{task.name}'")
       print(f"     Delay: {task.delay}")
+
+  def attach(self):
+    print(f" Attaching to '{self.name}' ...")
+    # Attach to application
+    self.app = Application(backend="win32").connect(title=self.name, timeout=10)
+    self.window = self.app.window(title=self.name)
 
   def is_active(self):
     return self.name in win32.window_current()
@@ -66,3 +71,13 @@ class Program(object):
 
   def mouse_click(self, button='left', delay=None):
     self.mouse.click(button, delay)
+
+class NoProgram(Program):
+  def __init__(self, config):
+    super().__init__(config)
+
+  def load(self):
+    super().load()
+
+  def attach(self):
+    pass # dont attach

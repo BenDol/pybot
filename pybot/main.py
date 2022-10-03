@@ -9,6 +9,7 @@ import importlib
 import pybot.core.tasks as tasks
 import pybot.core.config as config
 from pybot.core.program import Program
+from pybot.core.program import NoProgram
 from pybot.core.component import Component
 from pybot.core.component import TaskComponent
 from pybot.core.settings import settings as settings
@@ -115,9 +116,14 @@ class App:
         self.program_classes[n] = obj
 
   def create_program(self):
-    class_name = settings['program']['class']
+    prog_conf = settings.get('program')
+    if not prog_conf:
+      return NoProgram({})
+    class_name = prog_conf.get('class')
+    if not class_name:
+      return NoProgram(prog_conf)
     program = self.program_classes[class_name]
-    return program(settings['program'])
+    return program(prog_conf)
 
   def load_scripts(self):
     configs = self.settings.get("scripts")
