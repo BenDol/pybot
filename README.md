@@ -1,5 +1,5 @@
 # PyBot
-![logo-256x256](https://github.com/BenDol/pybot/blob/master/media/logo-256x256.png)
+![logo-128x128](https://github.com/BenDol/pybot/blob/master/media/logo-128x128.png)
 
 ## What is PyBot
 PyBot is a Python scripting engine that provides a framework for building component based tasks with the following features: task dispatcher, component system, input controls, easy script configuration (via json), extendable script configuration, multithreading, and more!
