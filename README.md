@@ -22,6 +22,8 @@ pybot-cli
 ## Building the application
 Run `build.bat` the binary, scripts and settings are found in `/dist` directory
 
+![dist](https://github.com/BenDol/pybot/blob/master/media/dist.png)
+
 ## How it works
 PyBot loads using the [`settings.json`](https://github.com/BenDol/pybot/blob/master/settings.json) configurations. It will first attempt to "attach" to a given program if the bot tasks are dictatorial (configured from settings.json) programs can be added to [`/scripts/programs`](https://github.com/BenDol/pybot/tree/master/scripts/programs). Once attached it will then load any tasks specific to the program, which is also configurable. Next PyBot will load the components from [`/scripts/components`](https://github.com/BenDol/pybot/tree/master/scripts/components), once loaded it will load all scripts provided in [`/scripts`](https://github.com/BenDol/pybot/tree/master/scripts).
 
