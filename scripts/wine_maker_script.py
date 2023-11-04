@@ -105,7 +105,6 @@ class WineMakerScript(Script):
           self.state = State.OpenBag
       case _:
         pass
-    #self.run_task(self.check_bag)
 
   @task(delay=[1,3], silent=True)
   def open_bag(self, *args):
@@ -205,7 +204,6 @@ class WineMakerScript(Script):
       self.used_items = True
     def failed(task, err):
       print("failed")
-
     return TaskHandler(started=started, completed=completed, failed=failed)
 
   @task(delay=[1,3], silent=True)

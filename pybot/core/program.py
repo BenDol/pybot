@@ -70,8 +70,8 @@ class Program(object):
   def attach(self):
     print(f" Attaching to '{self.name}' ...")
     # Attach to application
-    self.app = Application(backend="win32").connect(title=self.name, timeout=10)
-    self.window = self.app.window(title=self.name)
+    self.app = Application(backend="uia").connect(best_match=self.name, timeout=10)
+    self.window = self.app.window(best_match=self.name)
 
   def is_active(self):
     return self.name in win32.window_current()

@@ -61,7 +61,6 @@ class App:
     self.program_modules = []
     self.program_classes = {}
     self.keybinds = {}
-    tasks.app = self
 
   def is_active(self):
     return self.program.is_active()
@@ -225,6 +224,7 @@ def main():
 
   global app
   app = App()
+  tasks.app = app
   app.load()
   app.start()
 
